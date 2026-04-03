@@ -308,27 +308,27 @@
       ]
     },
     {
-      "type": "textGrid",
+      "type": "skeleton",
       "start": 120,
       "end": 130,
       "data": [
-        { "name": "text", "content": "Clear structure improves understanding", "showAt": 120 },
-        { "name": "text", "content": "Each idea should be isolated", "showAt": 121 },
-        { "name": "text", "content": "Visual layout reduces confusion", "showAt": 122 },
-        { "name": "text", "content": "Step-by-step flow builds confidence", "showAt": 123 },
-        { "name": "text", "content": "Consistency helps memory", "showAt": 124 },
-        { "name": "text", "content": "Focus leads to deeper learning", "showAt": 125 }
+        { "name": "title", "content": "Understanding Force", "showAt": 120 },
+        { "name": "image", "content": "whatisforce.webp", "showAt": 121 },
+        { "name": "para", "content": "Force is a push or pull that can change motion.", "showAt": 122 },
+        { "name": "image", "content": "traversal.webp", "showAt": 123 }
       ]
     },
     {
-      "type": "skeleton",
+      "type": "textGrid",
       "start": 130,
       "end": 140,
       "data": [
-        { "name": "title", "content": "Understanding Force", "showAt": 130 },
-        { "name": "image", "content": "whatisforce.webp", "showAt": 131 },
-        { "name": "para", "content": "Force is a push or pull that can change motion.", "showAt": 132 },
-        { "name": "image", "content": "traversal.webp", "showAt": 133 }
+        { "name": "text", "content": "Clear structure improves understanding", "showAt": 130 },
+        { "name": "text", "content": "Each idea should be isolated", "showAt": 131 },
+        { "name": "text", "content": "Visual layout reduces confusion", "showAt": 132 },
+        { "name": "text", "content": "Step-by-step flow builds confidence", "showAt": 133 },
+        { "name": "text", "content": "Consistency helps memory", "showAt": 134 },
+        { "name": "text", "content": "Focus leads to deeper learning", "showAt": 135 }
       ]
     }
 

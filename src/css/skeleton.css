@@ -1,0 +1,36 @@
+
+/* skeleton slide */
+.slide.skeleton {
+    width: 100%;
+  }
+  
+  .skeleton-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* all items overlap */
+  .skeleton-body > * {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+    text-align: center;
+  }
+  
+  /* hide all by default */
+  .skeleton-body > * {
+    opacity: 0;
+  }
+  
+  /* show first (temporary until stepper) */
+  .skeleton-body > *:first-child {
+    opacity: 1;
+  }
+    

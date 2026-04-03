@@ -1,49 +1,56 @@
 <script>
   import { onMount } from "svelte";
-  import { getHtmlAtTime } from "../lib/utils/index.js";
-  import BottomNavBar from "./BottomNavBar.svelte";
+  import { getHtmlAtTime,getDeckEndTime } from "../lib/utils/index.js";
+ 
   import SyllabusBar from "./SyllabusBar.svelte";
 
   export let deck;
   export let timer;
+  let deckEndTime=0;
 
   let html = "";
   let currentTime = 0;
   let showSidebar = true;
-  let links = [];
+  export let links = [];
 
-  let playBtn, pauseBtn, stopBtn, scrub, timeEl;
+  // --- handlers ---
+  function handlePlayBtn() {
+    timer.play();
+  }
 
-  onMount(async () => {
-    const res = await fetch("/data/links.json");
-    links = await res.json();
+  function handlePauseBtn() {
+    timer.pause();
+  }
 
-    if (playBtn)  playBtn.addEventListener("click",  () => timer.play());
-    if (pauseBtn) pauseBtn.addEventListener("click", () => timer.pause());
-    if (stopBtn)  stopBtn.addEventListener("click",  () => timer.stop());
+  function handleStopBtn() {
+    timer.pause();
+    timer.seek(0);
+  }
 
-    if (scrub) {
-      scrub.addEventListener("input", (e) => {
-        const t = parseFloat(e.target.value) * (timer.duration ?? 1);
-        timer.seek(t);
-      });
-    }
-  });
-
-  setInterval(() => {
-    currentTime = timer.now();
-    if (timeEl) timeEl.textContent = currentTime.toFixed(1) + "s";
-    if (scrub && timer.duration) {
-      scrub.value = currentTime / timer.duration;
-    }
-  }, 100);
-
-  $: if (deck) {
-    html = getHtmlAtTime(deck, currentTime);
+  function handleScrub(e) {
+    const t = parseFloat(e.target.value) * (timer.duration ?? 1);
+    timer.seek(t);
   }
 
   function toggleSidebar() {
     showSidebar = !showSidebar;
+  }
+
+  onMount(async () => {
+   deckEndTime = getDeckEndTime(deck);
+   console.log("deckEndTime" , deckEndTime);
+  });
+
+  // --- time loop ---
+  setInterval(() => {
+    if (!timer) return;
+
+    currentTime = timer.now();
+  }, 100);
+
+  // --- reactive render ---
+  $: if (deck) {
+    html = getHtmlAtTime(deck, currentTime);
   }
 </script>
 
@@ -53,14 +60,39 @@
     <div class="stage">
       {@html html}
     </div>
-    <BottomNavBar
-      bind:playBtn
-      bind:pauseBtn
-      bind:stopBtn
-      bind:scrub
-      bind:timeEl
-      onToggle={toggleSidebar}
-    />
+
+    <!-- ============= Bottom NavBar ============= -->
+    <div class="navbar">
+      
+      <!-- controls -->
+      <div class="controls">
+        <button on:click={handlePlayBtn}>▶</button>
+        <button on:click={handlePauseBtn}>⏸</button>
+        <button on:click={handleStopBtn}>⏹</button>
+        <span class="time">{currentTime.toFixed(1)}/{deckEndTime}s</span>
+      </div>
+      
+      <!-- scrub -->
+      <div class="scrub-wrap">
+        <input
+          type="range"
+          min="0"
+          max= {deckEndTime - 1}
+          step="1"
+          value={ currentTime || 0}
+          on:input={handleScrub}
+        />
+      </div>
+      
+      <!-- right -->
+      <div class="right">
+        <a href="/">←</a>
+        <button on:click={toggleSidebar}>▥</button>
+      </div>
+      
+    </div>
+    <!-- ============= Bottom NavBar ============= -->
+
   </div>
 
   <div class="sidebar" class:hidden={!showSidebar}>
@@ -79,6 +111,7 @@
     padding: 0;
     height: 100vh;
     overflow: hidden;
+    background-color: #081B7A;
   }
 
   .root {
@@ -102,7 +135,6 @@
     position: relative;
   }
 
-  /* Sidebar: animate width for smooth slide in/out */
   .sidebar {
     width: 260px;
     flex-shrink: 0;
@@ -119,25 +151,59 @@
     border-left: none;
   }
 
-  #stage {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+/* nav bar */
+
+  .navbar {
+	height: 40px;
+	display: flex;
+	align-items: center;
+	padding: 0 10px;
+	gap: 8px;
+	border-top: 1px solid #333;
+	background: rgba(0, 0, 0, 0.3);
+	color: white;
+  }
+  
+  .controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+  }
+  
+  .time {
+	font-size: 13px;
+	color: white;
+	white-space: nowrap;
+  }
+  
+  /* Scrub takes all remaining width */
+  .scrub-wrap {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	min-width: 0;
+  }
+  
+  .scrub-wrap input {
+	width: 100%;
+  }
+  
+  .right {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+  }
+  
+  button, a {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 16px;
+	text-decoration: none;
+	color: white;
   }
 
-  #bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background-size: cover;
-    background-position: center;
-  }
 
-  #slides {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-  }
 </style>

@@ -1,0 +1,160 @@
+/* ======================================
+   EQ Slide (Mobile First – Stable Layout)
+====================================== */
+
+.slide.eq {
+    display: flex;
+    color:gray;
+    flex-direction: row;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding-left: 3rem;
+    padding-right: 3rem;
+
+    /* Prevent layout explosion */
+    overflow: hidden;
+}
+
+/* -------------------------------
+   Left: Equation Lines
+---------------------------------- */
+
+.slide.eq .eq-lines {
+    flex: 0 0 45%;
+    min-width: 0;                 /* 🔥 critical for flex shrink */
+    overflow: hidden;
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.slide.eq .eq-lines li {
+    padding: 4px 6px;
+    font-size: 1.25rem;
+    line-height: 1.3;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.03);
+
+    /* Handle long math safely */
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+}
+
+/* Highlight active line */
+/* .slide.eq .eq-lines li:last-child {
+    background: rgba(245, 197, 66, 0.18);
+    font-weight: 600;
+    border: 1px solid gold;
+    border-radius: 10px;
+} */
+.highlighted {
+    background: rgba(150, 124, 52, 0.18);
+    color:white;
+    font-weight: 600;
+    border: 2px solid gold;
+    border-radius: 10px;
+}
+
+/* -------------------------------
+   Right: Side Panel
+---------------------------------- */
+
+.slide.eq .eq-side-panel {
+    flex: 0 0 55%;
+    min-width: 0;                 /* 🔥 critical */
+    overflow: hidden;
+
+    padding: 6px;
+
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Explanation text */
+
+.slide.eq .eq-explain-item {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    text-align: justify;
+
+    background: rgba(255, 255, 255, 0.06);
+    padding: 14px 18px;
+    border-radius: 12px;
+
+    overflow-wrap: break-word;
+}
+
+/* Explanation image */
+
+.slide.eq .eq-explain-image img {
+    width: 70%;
+    margin: 0 auto;
+    display: block;
+    border-radius: 12px;
+}
+
+
+/* ======================================
+   Desktop Layout (≥1024px)
+====================================== */
+
+@media (min-width: 1024px) {
+
+    .slide.eq {
+        gap: 1.5rem;
+    }
+
+    .slide.eq .eq-lines li {
+        font-size: 1.5rem;
+    }
+
+    .slide.eq .eq-explain-item {
+        font-size: 1.2rem;
+    }
+}
+
+
+/* ======================================
+   Projector Layout (≥1600px)
+====================================== */
+
+@media (min-width: 1600px) {
+
+    .slide.eq {
+        gap: 2rem;
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+
+    .slide.eq .eq-lines {
+        flex: 0 0 50%;
+    }
+
+    .slide.eq .eq-side-panel {
+        flex: 0 0 50%;
+    }
+
+    .slide.eq .eq-lines li {
+        font-size: 2.25rem;
+    }
+
+    .slide.eq .eq-explain-item {
+        font-size: 2.25rem;
+        line-height: 1.5em;
+    }
+}

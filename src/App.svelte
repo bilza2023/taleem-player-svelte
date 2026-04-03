@@ -6,13 +6,18 @@
   import { resolveAssetPaths } from "./lib/utils/index.js";
 
   let deck = null;
+  let links = null;
   
   let timer;
 
   async function loadDeck() {
     const res = await fetch("/public/specs/goldenDeckV2.json");
     const json = await res.json();
-    deck = resolveAssetPaths(json);
+    deck = resolveAssetPaths(json,"/public/images/");
+
+    // Now download links 
+    const resLinks = await fetch("/data/links.json");
+    links = await resLinks.json();
   }
 
   onMount(async () => {
@@ -23,6 +28,6 @@
   });
 </script>
 
-{#if deck && timer}
-  <Player {deck} {timer} />
+{#if deck && timer && links}
+  <Player {deck} {timer} {links}/>
 {/if}

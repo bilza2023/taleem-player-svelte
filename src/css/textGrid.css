@@ -1,0 +1,29 @@
+
+/* text grid slide */
+.slide.textGrid {
+    width: 100%;
+  }
+  
+  .text-grid {
+    display: grid;
+    gap: 20px;
+    width: 100%;
+  
+    grid-template-columns: repeat(3, 1fr); /* 👈 same as image grid */
+  }
+  
+  .text-grid-item {
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 20px;
+  
+    font-weight: 600;   /* 👈 bold */
+    line-height: 1.4;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    text-align: center;
+  }
+  
