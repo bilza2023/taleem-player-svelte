@@ -1,0 +1,336 @@
+{
+  "version": "deck-v2",
+  "name": "Golden Deck V2 – Full Schema Coverage",
+  "background": {
+    "backgroundColor": "#111111",
+    "backgroundImage": null,
+    "backgroundImageOpacity": 0.3
+  },
+  "deck": [
+
+    {
+      "type": "titleAndSubtitle",
+      "start": 0,
+      "end": 5,
+      "data": [
+        { "name": "title", "content": "Taleem Slides", "showAt": 0 },
+        { "name": "subtitle", "content": "A calm, structured way to present ideas", "showAt": 3 }
+      ]
+    },
+
+    {
+      "type": "titleAndPara",
+      "start": 5,
+      "end": 10,
+      "data": [
+        { "name": "title", "content": "What is Taleem Slides?", "showAt": 5 },
+        { "name": "para", "content": "Taleem Slides is a simple system that turns structured data into clear visual slides. Each slide is predictable, controlled, and designed to help students understand ideas step by step.", "showAt": 6 }
+      ]
+    },
+
+    {
+      "type": "bulletList",
+      "start": 10,
+      "end": 15,
+      "data": [
+        { "name": "bullet", "content": "Slides are generated from clean data", "showAt": 10 },
+        { "name": "bullet", "content": "Nothing changes behind the scenes", "showAt": 11 },
+        { "name": "bullet", "content": "The author controls what appears", "showAt": 12 },
+        { "name": "bullet", "content": "The same lesson looks the same everywhere", "showAt": 13 }
+      ]
+    },
+
+    {
+      "type": "twoColumnText",
+      "start": 15,
+      "end": 20,
+      "data": [
+        { "name": "leftText", "content": "taleem-browser shows one complete slide at a time. Each slide appears fully and clearly.", "showAt": 15 },
+        { "name": "rightText", "content": "taleem-player shows ideas gradually. Content appears step by step as the lesson progresses.", "showAt": 17 }
+      ]
+    },
+
+    {
+      "type": "imageSlide",
+      "start": 20,
+      "end": 25,
+      "data": [
+        { "name": "image", "content": "image.png", "showAt": 20 }
+      ]
+    },
+
+    {
+      "type": "imageWithTitle",
+      "start": 25,
+      "end": 30,
+      "data": [
+        { "name": "title", "content": "Visual Support Matters", "showAt": 25 },
+        { "name": "image", "content": "image.png", "showAt": 26 }
+      ]
+    },
+
+    {
+      "type": "imageWithCaption",
+      "start": 30,
+      "end": 35,
+      "data": [
+        { "name": "image", "content": "image.png", "showAt": 30 },
+        { "name": "caption", "content": "Images help anchor understanding", "showAt": 31 }
+      ]
+    },
+
+    {
+      "type": "imageLeftBulletsRight",
+      "start": 35,
+      "end": 40,
+      "data": [
+        { "name": "image", "content": "image.png", "showAt": 35 },
+        { "name": "bullet", "content": "Each slide focuses on one idea", "showAt": 36 },
+        { "name": "bullet", "content": "Points are revealed in order", "showAt": 37 },
+        { "name": "bullet", "content": "No random or sudden changes", "showAt": 38 },
+        { "name": "bullet", "content": "Students follow step by step", "showAt": 39 }
+      ]
+    },
+
+    {
+      "type": "imageRightBulletsLeft",
+      "start": 40,
+      "end": 45,
+      "data": [
+        { "name": "image", "content": "image.png", "showAt": 40 },
+        { "name": "bullet", "content": "Slides remain stable and predictable", "showAt": 41 },
+        { "name": "bullet", "content": "The teacher controls the pace", "showAt": 42 },
+        { "name": "bullet", "content": "Students are never rushed", "showAt": 43 },
+        { "name": "bullet", "content": "Learning stays calm and focused", "showAt": 44 }
+      ]
+    },
+
+    {
+      "type": "table",
+      "start": 45,
+      "end": 50,
+      "data": [
+        { "name": "row", "content": "Layer , Role", "showAt": 45 },
+        { "name": "row", "content": "taleem-core , Defines the schema", "showAt": 45 },
+        { "name": "row", "content": "taleem-slides , Renders slides", "showAt": 45 },
+        { "name": "row", "content": "taleem-browser , Index-based viewing", "showAt": 45 },
+        { "name": "row", "content": "taleem-player , Time-based playback", "showAt": 45 }
+      ]
+    },
+
+    {
+      "type": "barChart",
+      "start": 50,
+      "end": 55,
+      "data": [
+        {
+          "name": "bar",
+          "content": "Clarity",
+          "showAt": 50,
+          "spItems": [
+            { "name": "value", "content": 6 }
+          ]
+        },
+        {
+          "name": "bar",
+          "content": "Structure",
+          "showAt": 51,
+          "spItems": [
+            { "name": "value", "content": 5 }
+          ]
+        },
+        {
+          "name": "bar",
+          "content": "Visual Support",
+          "showAt": 52,
+          "spItems": [
+            { "name": "value", "content": 4 }
+          ]
+        },
+        {
+          "name": "bar",
+          "content": "Consistency",
+          "showAt": 53,
+          "spItems": [
+            { "name": "value", "content": 6 }
+          ]
+        }
+      ]
+    },
+
+    {
+      "type": "progressbar",
+      "start": 55,
+      "end": 60,
+      "data": [
+        {
+          "name": "progress",
+          "content": "Lesson Progress",
+          "showAt": 55,
+          "spItems": [
+            { "name": "value", "content": 60 }
+          ]
+        }
+      ]
+    },
+
+    {
+      "type": "quoteSlide",
+      "start": 60,
+      "end": 65,
+      "data": [
+        { "name": "quote", "content": "Clarity makes learning easier for everyone.", "showAt": 60 },
+        { "name": "author", "content": "— Taleem", "showAt": 61 }
+      ]
+    },
+
+    {
+      "type": "keyIdeasSlide",
+      "start": 65,
+      "end": 70,
+      "data": [
+        {
+          "name": "card",
+          "content": "Focus",
+          "showAt": 65,
+          "spItems": [
+            { "name": "icon", "content": "🧠" }
+          ]
+        },
+        {
+          "name": "card",
+          "content": "Clarity",
+          "showAt": 66,
+          "spItems": [
+            { "name": "icon", "content": "📘" }
+          ]
+        },
+        {
+          "name": "card",
+          "content": "Pace",
+          "showAt": 67,
+          "spItems": [
+            { "name": "icon", "content": "⏱️" }
+          ]
+        },
+        {
+          "name": "card",
+          "content": "Understanding",
+          "showAt": 68,
+          "spItems": [
+            { "name": "icon", "content": "🎯" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "type": "eq",
+      "start": 70,
+      "end": 80,
+      "data": [
+        { "name": "heading", "content": "Structured Explanation", "showAt": 70 },
+        {
+          "name": "math",
+          "content": "$(a + b)^2 = (a + b)(a + b)$",
+          "showAt": 71,
+          "spItems": [
+            { "name": "text", "content": "The square applies to the whole bracket." },
+            { "name": "image", "content": "image.png" }
+          ]
+        },
+        {
+          "name": "math",
+          "content": "$= a^2 + 2ab + b^2$",
+          "showAt": 73,
+          "spItems": [
+            { "name": "text", "content": "Each term multiplies every other term." },
+            { "name": "image", "content": "image.png" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "type": "fillImage",
+      "start": 80,
+      "end": 85,
+      "data": [
+        { "name": "image", "content": "image.png", "showAt": 80 }
+      ]
+    },
+
+    {
+      "type": "titleAndPara",
+      "start": 85,
+      "end": 90,
+      "data": [
+        { "name": "title", "content": "Why Taleem Works", "showAt": 85 },
+        { "name": "para", "content": "Taleem Slides focuses on clarity, structure, and calm pacing. By controlling how information appears, it helps students understand deeply instead of rushing through content.", "showAt": 86 }
+      ]
+    },
+    {
+      "type": "focusList",
+      "start": 90,
+      "end": 100,
+      "data": [
+        { "name": "heading", "content": "Step-by-step focus", "showAt": 90 },
+        { "name": "bullet", "content": "Understand the idea", "showAt": 91 },
+        { "name": "bullet", "content": "Break it into parts", "showAt": 92 },
+        { "name": "bullet", "content": "Apply the method", "showAt": 93 },
+        { "name": "bullet", "content": "Verify the result", "showAt": 94 }
+      ]
+    },
+    {
+      "type": "imageStrip",
+      "start": 100,
+      "end": 110,
+      "data": [
+        { "name": "image", "content": "box.webp", "showAt": 100 },
+        { "name": "image", "content": "image.png", "showAt": 101 },
+        { "name": "image", "content": "box.webp", "showAt": 102 },
+        { "name": "image", "content": "image.png", "showAt": 103 },
+        { "name": "image", "content": "box.webp", "showAt": 104 },
+        { "name": "image", "content": "image.png", "showAt": 105 }
+      ]
+    },
+    {
+      "type": "imageGrid",
+      "start": 110,
+      "end": 120,
+      "data": [
+        { "name": "image", "content": "box.webp", "showAt": 110 },
+        { "name": "image", "content": "whatisforce.webp", "showAt": 111 },
+        { "name": "image", "content": "whatisforce.webp", "showAt": 112 },
+        { "name": "image", "content": "image.png", "showAt": 113 },
+        { "name": "image", "content": "traversal.webp", "showAt": 114 },
+        { "name": "image", "content": "image.png", "showAt": 115 }
+      ]
+    },
+    {
+      "type": "textGrid",
+      "start": 120,
+      "end": 130,
+      "data": [
+        { "name": "text", "content": "Clear structure improves understanding", "showAt": 120 },
+        { "name": "text", "content": "Each idea should be isolated", "showAt": 121 },
+        { "name": "text", "content": "Visual layout reduces confusion", "showAt": 122 },
+        { "name": "text", "content": "Step-by-step flow builds confidence", "showAt": 123 },
+        { "name": "text", "content": "Consistency helps memory", "showAt": 124 },
+        { "name": "text", "content": "Focus leads to deeper learning", "showAt": 125 }
+      ]
+    },
+    {
+      "type": "skeleton",
+      "start": 130,
+      "end": 140,
+      "data": [
+        { "name": "title", "content": "Understanding Force", "showAt": 130 },
+        { "name": "image", "content": "whatisforce.webp", "showAt": 131 },
+        { "name": "para", "content": "Force is a push or pull that can change motion.", "showAt": 132 },
+        { "name": "image", "content": "traversal.webp", "showAt": 133 }
+      ]
+    }
+
+  ]
+}
