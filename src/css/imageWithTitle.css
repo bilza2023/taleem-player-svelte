@@ -1,35 +1,58 @@
-
-/* ----------------------------------
-   Base Layout
----------------------------------- */
-
 .slide.imageWithTitle {
-    align-items: center;
-    text-align: center;
-    gap: 2.5rem;
+  align-items: center;
+  text-align: center;
+  gap: 2.5rem;
+}
+
+/* TITLE → slight delay */
+.slide.imageWithTitle h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+
+  opacity: 0;
+  transform: translateY(10px);
+
+  animation: titleSoftIn 0.45s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+/* IMAGE → first focus */
+.slide.imageWithTitle img {
+  max-width: 85%;
+  max-height: 70%;
+  object-fit: contain;
+
+  opacity: 0;
+  transform: scale(0.96);
+
+  animation: imgSoftIn 0.5s ease-out forwards;
+}
+
+/* animations */
+@keyframes imgSoftIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
+}
+
+@keyframes titleSoftIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* portrait */
+@media (orientation: portrait) {
   .slide.imageWithTitle h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
-    line-height: 1.2;
-    margin: 0;
-  }
-  
-  .slide.imageWithTitle img {
-    max-width: 85%;
-    max-height: 70%;
-    object-fit: contain;
+    font-size: 3.2rem;
   }
 
-  @media (orientation: portrait) {
-    .slide.imageWithTitle h1 {
-      font-size: 3.2rem;
-    }
-  
-    .slide.imageWithTitle img {
-      max-width: 95%;
-      max-height: 65%;
-    }
+  .slide.imageWithTitle img {
+    max-width: 95%;
+    max-height: 65%;
   }
-  
+}

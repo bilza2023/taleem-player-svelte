@@ -1,6 +1,5 @@
 /* ----------------------------------
    Title And Paragraph Slide
-   (Mobile First – Base)
 ---------------------------------- */
 
 .slide.titleAndPara {
@@ -25,6 +24,12 @@
 
    max-width: 1100px;
    margin: 0 auto;
+
+   /* animation */
+   opacity: 0;
+   transform: translateY(12px);
+
+   animation: titleSoftIn 0.5s ease-out forwards;
 }
 
 /* Paragraph */
@@ -35,6 +40,31 @@
 
    max-width: 1000px;
    margin: 0 auto;
+
+   /* animation */
+   opacity: 0;
+   transform: translateY(10px);
+
+   animation: paraSoftIn 0.6s ease-out forwards;
+   animation-delay: 0.2s;
+}
+
+/* ==================================
+   Animations
+================================== */
+
+@keyframes titleSoftIn {
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+@keyframes paraSoftIn {
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
 }
 
 
@@ -50,20 +80,20 @@
    }
 
    .slide.titleAndPara h1 {
-       font-size: 2.8rem;      /* slightly tighter */
+       font-size: 2.8rem;
        max-width: 900px;
    }
 
    .slide.titleAndPara p {
        font-size: 1.6rem;
-       max-width: 750px;       /* reduce line length */
+       max-width: 750px;
        line-height: 1.6;
    }
 }
 
 
 /* ==================================
-  LARGE DESKTOP / PROJECTOR
+  LANDSCAPE / PORTRAIT
 ================================== */
 
 @media (orientation: landscape) {
@@ -79,9 +109,11 @@
       font-size: 2.75rem;
       max-width: 1100px;
       line-height: 2.2;
-      text-align:justify;
+      text-align: justify;
   }
 }
+
+
 /* ==================================
   LARGE DESKTOP / PROJECTOR
 ================================== */
@@ -94,7 +126,7 @@
    }
 
    .slide.titleAndPara h1 {
-       font-size: 4rem;        /* bold projector presence */
+       font-size: 4rem;
        max-width: 1200px;
    }
 
@@ -104,4 +136,3 @@
        line-height: 1.8;
    }
 }
-

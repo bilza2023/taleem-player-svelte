@@ -1,10 +1,6 @@
-/* ----------------------------------
-   Quote Slide Container
----------------------------------- */
-
 .slide.quoteSlide {
-  margin: 0;              /* critical fix */
-  width: 100%;            /* ensure alignment */
+  margin: 0;
+  width: 100%;
 
   align-items: center;
   justify-content: center;
@@ -13,10 +9,7 @@
   padding: 6rem 10rem;
 }
 
-/* ----------------------------------
-   Quote Text
----------------------------------- */
-
+/* quote */
 .slide.quoteSlide p {
   font-size: 4.2rem;
   line-height: 1.4;
@@ -26,35 +19,33 @@
   margin: 0 auto;
 
   position: relative;
+
+  opacity: 0;
+  transform: translateY(12px);
+
+  animation: quoteIn 0.6s ease-out forwards;
 }
 
-/* Subtle quotation marks */
-.slide.quoteSlide p::before,
-.slide.quoteSlide p::after {
-  font-size: 6rem;
-  opacity: 0.15;
-  position: absolute;
-}
-
-.slide.quoteSlide p::before {
-  content: "“";
-  left: -4rem;
-  top: -2rem;
-}
-
-.slide.quoteSlide p::after {
-  content: "”";
-  right: -4rem;
-  bottom: -2rem;
-}
-
-/* ----------------------------------
-   Author
----------------------------------- */
-
+/* author */
 .slide.quoteSlide footer {
   margin-top: 3rem;
   font-size: 2.4rem;
   font-weight: 500;
-  opacity: 0.75;
+  opacity: 0;
+
+  animation: quoteAuthorIn 0.5s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes quoteIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes quoteAuthorIn {
+  to {
+    opacity: 0.75;
+  }
 }

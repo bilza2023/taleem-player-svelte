@@ -103,7 +103,7 @@
 
 <style>
   @import "/css/themes/dark.css";
-  @import "/css/taleem.css";
+  @import "../css/index.css";
   @import "/css/app.css";
 
   :global(body) {
