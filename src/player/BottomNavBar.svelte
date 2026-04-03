@@ -1,12 +1,12 @@
 <script>
-	export let onToggle;
+	export let onToggle=()=>{};
 	export let backHref = '/';
 
-	export let playBtn;
-	export let pauseBtn;
-	export let stopBtn;
-	export let scrub;
-	export let timeEl;
+	export let playBtn=()=>{};
+	export let pauseBtn=()=>{};
+	export let stopBtn=()=>{};
+	export let scrub=()=>{};
+	export let timeEl=()=>{};
 </script>
 
 <style>
@@ -61,7 +61,7 @@ button, a {
 		<span bind:this={timeEl}>0.0s</span>
 
 		<div class="scrub-wrap">
-			<input bind:this={scrub} type="range" min="0" max="1" step="0.1" />
+			<input bind:this={scrub} type="range" min="0" max="200" step="0.1" />
 		</div>
 	</div>
 

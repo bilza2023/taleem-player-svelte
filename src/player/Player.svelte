@@ -1,18 +1,58 @@
 <script>
-  export let deck;
-  export let currentTime;
-
+  import { onMount } from "svelte";
   import { getHtmlAtTime } from "../lib/utils/index.js";
+  import BottomNavBar from "./BottomNavBar.svelte";
+
+  export let deck;
+  export let timer;
 
   let html = "";
+  let currentTime = 0;
+
+  // DOM element refs bound from BottomNavBar
+  let playBtn, pauseBtn, stopBtn, scrub, timeEl;
+
+  // Poll timer for currentTime
+  setInterval(() => {
+    currentTime = timer.now();
+
+    // Update the time display element
+    if (timeEl) timeEl.textContent = currentTime.toFixed(1) + "s";
+
+    // Update scrub position (assuming timer has a duration)
+    if (scrub && timer.duration) {
+      scrub.value = currentTime / timer.duration;
+    }
+  }, 100);
 
   $: if (deck) {
     html = getHtmlAtTime(deck, currentTime);
   }
+
+  // Attach event listeners once DOM elements are bound
+  onMount(() => {
+    if (playBtn)  playBtn.addEventListener("click",  () => timer.play());
+    if (pauseBtn) pauseBtn.addEventListener("click", () => timer.pause());
+    if (stopBtn)  stopBtn.addEventListener("click",  () => timer.stop());
+
+    if (scrub) {
+      scrub.addEventListener("input", (e) => {
+        const t = parseFloat(e.target.value) * (timer.duration ?? 1);
+        timer.seek(t);
+      });
+    }
+  });
 </script>
 
 <div class="player">
   {@html html}
+  <BottomNavBar
+    bind:playBtn
+    bind:pauseBtn
+    bind:stopBtn
+    bind:scrub
+    bind:timeEl
+  />
 </div>
 
 <style>

@@ -2,13 +2,12 @@
   import { onMount } from "svelte";
   import Player from "./player/Player.svelte";
 
-  import { renderLoop, Timer } from "taleem-pam";
+  import { Timer } from "taleem-pam";
   import { resolveAssetPaths } from "./lib/utils/index.js";
 
   let deck = null;
-  let currentTime = 0;
-
-  const timer = new Timer();
+  
+  let timer;
 
   async function loadDeck() {
     const res = await fetch("/public/specs/goldenDeckV2.json");
@@ -18,15 +17,12 @@
 
   onMount(async () => {
     await loadDeck();
+    timer = new Timer();
 
-    renderLoop.start(() => {
-      currentTime = timer.now();
-    });
-
-    timer.play();
+    // timer.play();
   });
 </script>
 
-{#if deck}
-  <Player {deck} {currentTime} />
+{#if deck && timer}
+  <Player {deck} {timer} />
 {/if}
