@@ -1,121 +1,89 @@
-<script>
-	import { page } from '$app/stores';
-	export let visible = true;
-	export let links = [];
 
+<script>
+	export let links = [];
+  
 	// Extract unique tags
 	$: tags = [...new Set(links.map(l => l.tag))];
-
+  
 	let selectedTag = null;
-
-	// Default to first tag
+  
 	$: if (tags.length && !selectedTag) {
-		selectedTag = tags[0];
+	  selectedTag = tags[0];
 	}
-
-	// Filter links by selected tag
+  
 	$: filteredLinks = links.filter(l => l.tag === selectedTag);
-</script>
-
-<style>
-.sidebar {
+  </script>
+  
+  <div class="sidebar">
+  
+	<select class="select" bind:value={selectedTag}>
+	  {#each tags as tag}
+		<option value={tag}>{tag}</option>
+	  {/each}
+	</select>
+  
+	<div class="list">
+	  {#each filteredLinks as link}
+		<a class="card" href={`/play/${link.deck}`}>
+		  <!-- <img class="thumb" src={`/public/images/${link.image}`} alt={link.title} /> -->
+		  <img class="thumb" src={`/public/images/box.webp`} alt={link.title} />
+		  <div class="title">{link.title}</div>
+		</a>
+	  {/each}
+	</div>
+  
+  </div>
+  
+  <style>
+  .sidebar {
 	width: 100%;
-	padding: 16px;
+	padding: 10px;
 	box-sizing: border-box;
-}
-
-/* Dropdown */
-.select {
+  }
+  
+  .select {
 	width: 100%;
-	margin-bottom: 16px;
-	padding: 8px 12px;
-	border-radius: 12px;
+	margin-bottom: 12px;
+	padding: 6px 10px;
+	border-radius: 8px;
 	border: 1px solid #e2e8f0;
 	background: #f8fafc;
-	font-size: 14px;
+	font-size: 13px;
 	outline: none;
 	cursor: pointer;
-	transition: border 0.2s ease, box-shadow 0.2s ease;
-}
-
-.select:focus {
-	border-color: #94a3b8;
-	box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.2);
-}
-
-/* Thumbnail */
-.list {
+  }
+  
+  .list {
 	display: flex;
 	flex-direction: column;
-	gap: 14px;
-}
-
-.video-card {
+	gap: 10px;
+  }
+  
+  .card {
 	display: flex;
-	gap: 12px;
+	flex-direction: column;
 	text-decoration: none;
 	color: inherit;
-	cursor: pointer;
 	background: #f8fafc;
-	padding: 10px;
-	border-radius: 12px;
+	border-radius: 10px;
+	overflow: hidden;
 	transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.video-card:hover {
+  }
+  
+  .card:hover {
 	background: #e2e8f0;
 	transform: translateY(-2px);
-}
-
-.thumb {
-	width: 120px;
-	height: 70px;
+  }
+  
+  .thumb {
+	width: 100%;
+	aspect-ratio: 16 / 9;
 	object-fit: cover;
-	border-radius: 8px;
-	flex-shrink: 0;
-}
-
-.info {
-	display: flex;
-	align-items: center;
-}
-
-.video-title {
-	font-size: 14px;
+  }
+  
+  .title {
+	font-size: 13px;
 	font-weight: 500;
-}
-</style>
-
-{#if visible}
-<div class="sidebar">
-
-	<!-- Tag Dropdown -->
-	<select class="select" bind:value={selectedTag}>
-		{#each tags as tag}
-			<option value={tag}>{tag}</option>
-		{/each}
-	</select>
-
-	<!-- Video List -->
-	<div class="list">
-		{#each filteredLinks as link}
-		<a
-	class="video-card"
-	href={`/class/${$page.params.classId}/${$page.params.chapterId}/${link.deck}`}
->
-		
-				<img
-					class="thumb"
-					src={`/images/${link.image}`}
-					alt={link.title}
-				/>
-
-				<div class="info">
-					<div class="video-title">{link.title}</div>
-				</div>
-			</a>
-		{/each}
-	</div>
-
-</div>
-{/if}
+	padding: 6px 8px;
+  }
+  </style>
