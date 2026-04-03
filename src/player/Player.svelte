@@ -12,7 +12,6 @@
   let showSidebar = true;
   let links = [];
 
-  // DOM element refs bound from BottomNavBar
   let playBtn, pauseBtn, stopBtn, scrub, timeEl;
 
   onMount(async () => {
@@ -50,7 +49,6 @@
 
 <div class="root">
 
-  <!-- LEFT: stage + navbar stacked -->
   <div class="left">
     <div class="stage">
       {@html html}
@@ -65,12 +63,9 @@
     />
   </div>
 
-  <!-- RIGHT: syllabus sidebar -->
-  {#if showSidebar}
-  <div class="sidebar">
+  <div class="sidebar" class:hidden={!showSidebar}>
     <SyllabusBar {links} />
   </div>
-  {/if}
 
 </div>
 
@@ -84,10 +79,8 @@
     padding: 0;
     height: 100vh;
     overflow: hidden;
-
   }
 
-  /* Full viewport: left + right side by side */
   .root {
     display: flex;
     width: 100vw;
@@ -95,27 +88,35 @@
     background-color: rgba(16, 0, 0, 0.788);
   }
 
-  /* Left column: stage grows, navbar fixed at bottom */
   .left {
     display: flex;
     flex-direction: column;
-    flex: 1;          /* takes all remaining width when sidebar hides */
+    flex: 1;
     min-width: 0;
     overflow: hidden;
   }
 
   .stage {
-    flex: 1;          /* grows to fill space above navbar */
+    flex: 1;
     overflow: hidden;
     position: relative;
   }
 
-  /* Right column: fixed 260px, scrollable */
+  /* Sidebar: animate width for smooth slide in/out */
   .sidebar {
     width: 260px;
     flex-shrink: 0;
     overflow-y: auto;
-    border-left: 1px solid #ddd;
+    overflow-x: hidden;
+    border-left: 1px solid #333;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    opacity: 1;
+  }
+
+  .sidebar.hidden {
+    width: 0;
+    opacity: 0;
+    border-left: none;
   }
 
   #stage {
