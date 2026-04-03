@@ -37,8 +37,11 @@
   <style>
   .sidebar {
 	width: 100%;
-	padding: 10px;
+	padding: 5px;
 	box-sizing: border-box;
+	/* background-color: #081B7A; */
+	/* background-color: grey; */
+	min-height:100vw;
   }
   
   .select {

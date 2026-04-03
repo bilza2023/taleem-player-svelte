@@ -84,7 +84,7 @@
     padding: 0;
     height: 100vh;
     overflow: hidden;
-    background-color: #081B7A;
+
   }
 
   /* Full viewport: left + right side by side */
@@ -92,6 +92,7 @@
     display: flex;
     width: 100vw;
     height: 100vh;
+    background-color: rgba(16, 0, 0, 0.788);
   }
 
   /* Left column: stage grows, navbar fixed at bottom */
