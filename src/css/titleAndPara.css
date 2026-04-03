@@ -15,7 +15,7 @@
    text-align: center;
 }
 
-/* Title */
+/* Title → NO animation (anchor) */
 
 .slide.titleAndPara h1 {
    font-size: 3rem;
@@ -24,15 +24,9 @@
 
    max-width: 1100px;
    margin: 0 auto;
-
-   /* animation */
-   opacity: 0;
-   transform: translateY(12px);
-
-   animation: titleSoftIn 0.5s ease-out forwards;
 }
 
-/* Paragraph */
+/* Paragraph → soft entry */
 
 .slide.titleAndPara p {
    font-size: 2.2rem;
@@ -41,24 +35,14 @@
    max-width: 1000px;
    margin: 0 auto;
 
-   /* animation */
    opacity: 0;
-   transform: translateY(10px);
+   transform: translateY(8px);
 
-   animation: paraSoftIn 0.6s ease-out forwards;
-   animation-delay: 0.2s;
+   animation: paraSoftIn 0.45s ease-out forwards;
+   animation-delay: 0.15s;
 }
 
-/* ==================================
-   Animations
-================================== */
-
-@keyframes titleSoftIn {
-   to {
-      opacity: 1;
-      transform: translateY(0);
-   }
-}
+/* animation */
 
 @keyframes paraSoftIn {
    to {
