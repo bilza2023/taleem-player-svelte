@@ -1,6 +1,9 @@
 <script>
   import { onMount } from "svelte";
-  import { getHtmlAtTime,getDeckEndTime } from "../lib/utils/index.js";
+  import { getDeckEndTime } from "../lib/utils/index.js";
+  import { renderTaleemSlide } from "../lib/taleem-slides";
+  import { runActions } from "../lib/actionRunner/runActions.js";
+  import { actions } from "../lib/actionRunner/actions.js";
  
   import SyllabusBar from "./SyllabusBar.svelte";
 
@@ -38,19 +41,18 @@
 
   onMount(async () => {
    deckEndTime = getDeckEndTime(deck);
-   console.log("deckEndTime" , deckEndTime);
   });
 
   // --- time loop ---
   setInterval(() => {
-    if (!timer) return;
-
-    currentTime = timer.now();
-  }, 100);
+  if (!timer) return;
+  currentTime = timer.now();
+  runActions(actions, currentTime);
+}, 100);
 
   // --- reactive render ---
   $: if (deck) {
-    html = getHtmlAtTime(deck, currentTime);
+    html = renderTaleemSlide(deck.deck[0]);
   }
 </script>
 
@@ -105,6 +107,7 @@
   @import "/css/themes/dark.css";
   @import "../css/index.css";
   @import "/css/app.css";
+
 
   :global(body) {
     margin: 0;

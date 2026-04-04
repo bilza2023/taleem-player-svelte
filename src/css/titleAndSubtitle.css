@@ -4,16 +4,21 @@
   gap: 32px;
 }
 
-/* Title → NO animation */
+/* Title → add animation */
 .slide.titleAndSubtitle h1 {
   font-size: 5.8rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.015em;
   margin: 0;
+
+  opacity: 0;
+  transform: translateY(16px);
+
+  animation: titleSoftIn 0.5s ease-out forwards;
 }
 
-/* Subtitle → keep soft entry (optional but nice) */
+/* Subtitle → keep but slightly lighter */
 .slide.titleAndSubtitle h2 {
   font-size: 2.3rem;
   font-weight: 400;
@@ -26,7 +31,15 @@
   animation-delay: 0.2s;
 }
 
-/* animation only for subtitle */
+/* Title animation (stronger) */
+@keyframes titleSoftIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtitle animation (softer) */
 @keyframes subtitleSoftIn {
   to {
     opacity: 0.8;
