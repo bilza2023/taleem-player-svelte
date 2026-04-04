@@ -1,3 +1,4 @@
+
 export const actions = [
     // t = 0 (title visible, subtitle hidden)
     { time: 0, targets: ["s-title"], action: "removeClass", classes: ["hidden"] },
