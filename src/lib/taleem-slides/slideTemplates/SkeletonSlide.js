@@ -1,51 +1,57 @@
-// SkeletonSlide
-export function SkeletonSlide(data, currentShowAt = null) {
+export function SkeletonSlide(data) {
   const items = data.data ?? [];
 
   if (!items.length) {
     throw new Error("skeleton: requires items");
   }
 
-  function visible(item) {
-    return currentShowAt === null || (item.showAt ?? 0) === currentShowAt;
+  const actions = [];
+  const sid = `s${data.start}`;
+
+  function processTimings(item, id) {
+    if (!item?.timings) return;
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
   }
 
-  function renderItem(item) {
-    if (!visible(item)) return "";
+  function renderItem(item, i) {
+    const id = `${sid}-${item.name}${i}`;
+    processTimings(item, id);
 
     if (item.name === "title") {
-      return `<h1 class="${item.classes || ""}">${item.content}</h1>`;
+      return `<h1 id="${id}" class="hidden ${item.classes || ""}">${item.content}</h1>`;
     }
 
     if (item.name === "para") {
-      return `<p class="${item.classes || ""}">${item.content}</p>`;
+      return `<p id="${id}" class="hidden ${item.classes || ""}">${item.content}</p>`;
     }
 
     if (item.name === "image") {
       return `
-        <div class="skeleton-image ${item.classes || ""}">
+        <div id="${id}" class="skeleton-image hidden ${item.classes || ""}">
           <img src="${item.content}" />
         </div>
-      `;
-    }
-
-    if (item.name === "bullets") {
-      const bullets = item.content || [];
-      return `
-        <ul class="${item.classes || ""}">
-          ${bullets.map(b => `<li>${b}</li>`).join("")}
-        </ul>
       `;
     }
 
     return "";
   }
 
-  return `
-    <section class="slide skeleton">
+  const html = `
+    <section class="slide skeleton" id="${sid}">
       <div class="skeleton-body">
         ${items.map(renderItem).join("")}
       </div>
     </section>
   `;
+
+  return { html, actions };
 }

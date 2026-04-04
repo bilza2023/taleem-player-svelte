@@ -1,23 +1,46 @@
-// ImageRightBulletsLeftSlide
-export function ImageRightBulletsLeftSlide(data, currentShowAt = null) {
+export function ImageRightBulletsLeftSlide(data) {
   const raw = data.data ?? [];
 
   const img = raw.find(d => d.name === "image");
   const bullets = raw.filter(d => d.name === "bullet");
 
-  const showImg = currentShowAt === null || (img?.showAt ?? 0) <= currentShowAt;
+  const actions = [];
+  const sid = `s${data.start}`;
+  const imgId = `${sid}-image`;
 
-  const visibleBullets =
-    currentShowAt === null
-      ? bullets
-      : bullets.filter(b => (b.showAt ?? 0) <= currentShowAt);
+  function processTimings(item, id) {
+    if (!item?.timings) return;
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
 
-  return `
-    <section class="slide imageRightBulletsLeft">
+  if (img) processTimings(img, imgId);
+
+  const html = `
+    <section class="slide imageRightBulletsLeft" id="${sid}">
+
       <ul>
-        ${visibleBullets.map(b => `<li class="${b.classes || ""}">${b.content}</li>`).join("")}
+        ${bullets
+          .map((b, i) => {
+            const id = `${sid}-b${i + 1}`;
+            processTimings(b, id);
+            return `<li id="${id}" class="hidden ${b.classes || ""}">${b.content}</li>`;
+          })
+          .join("")}
       </ul>
-      ${showImg ? `<img class="${img?.classes || ""}" src="${img?.content}" />` : ``}
+
+      <img id="${imgId}" class="hidden ${img?.classes || ""}" src="${img?.content}" />
+
     </section>
   `;
+
+  return { html, actions };
 }

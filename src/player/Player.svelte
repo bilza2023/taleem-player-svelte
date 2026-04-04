@@ -3,7 +3,7 @@
   import { getDeckEndTime } from "../lib/utils/index.js";
   import { renderTaleemSlide } from "../lib/taleem-slides";
   import { runActions } from "../lib/actionRunner/runActions.js";
-  // import { actions } from "../lib/actionRunner/actions.js";
+  import { getSlideAtTime } from "../lib/utils/getSlideAtTime.js";
 
   import SyllabusBar from "./SyllabusBar.svelte";
 
@@ -14,6 +14,7 @@
   let html = "";
   let actions = [];
   let currentTime = 0;
+  let currentSlide = null;
   let showSidebar = true;
   export let links = [];
 
@@ -46,15 +47,29 @@
 
   // --- time loop ---
   setInterval(() => {
-    if (!timer) return;
-    currentTime = timer.now();
-    runActions(actions, currentTime);
-  }, 100);
+  if (!timer || !deck) return;
+
+  currentTime = timer.now();
+
+  const slide = getSlideAtTime(deck, currentTime);
+
+  if (slide !== currentSlide) {
+    currentSlide = slide;
+
+    if (slide) {
+      const result = renderTaleemSlide(slide);
+      html = result.html;
+      actions = result.actions;
+    }
+  }
+
+  runActions(actions, currentTime);
+}, 100);
 
   // --- reactive render ---
   $: if (deck) {
     // html = renderTaleemSlide(deck.deck[0]);
-    const result = renderTaleemSlide(deck.deck[2]);
+    const result = renderTaleemSlide(deck.deck[1]);
     debugger;
     html = result.html;
     actions = result.actions;

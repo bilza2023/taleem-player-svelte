@@ -1,37 +1,55 @@
-// FocusListSlide
-import { extractOptional } from "../core/extractOptional";
 
-export function FocusListSlide(data, currentShowAt = null) {
+export function FocusListSlide(data) {
   const raw = data.data ?? [];
 
   const bullets = raw.filter(d => d.name === "bullet");
+  const headingItem = raw.find(d => d.name === "heading");
 
   if (!bullets.length) {
     throw new Error("focusList: requires bullets");
   }
 
-  const { heading } = extractOptional(data, ["heading"]);
-  const headingClasses = data.heading?.classes || "";
+  const actions = [];
+  const sid = `s${data.start}`;
+  const headingId = `${sid}-heading`;
 
-  // when this slide has own css remove bulletList class and add focusList
-  return `
-    <section class="slide focusList">
+  function processTimings(item, id) {
+    if (!item?.timings) return;
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
 
-      ${heading ? `<h1 class="${headingClasses}">${heading}</h1>` : ``}
+  if (headingItem) processTimings(headingItem, headingId);
+
+  const html = `
+    <section class="slide focusList" id="${sid}">
+
+      ${
+        headingItem
+          ? `<h1 id="${headingId}" class="hidden ${headingItem.classes || ""}">
+              ${headingItem.content}
+            </h1>`
+          : ``
+      }
 
       <ul>
-        ${bullets.map(b => {
-          const show = currentShowAt === null || (b.showAt ?? 0) <= currentShowAt;
-          const isActive = (b.showAt ?? 0) === currentShowAt;
-
-          if (!show) return "";
-
-          const stateClass = isActive ? "active" : "dim";
-
-          return `<li class="${b.classes || ""} ${stateClass}">${b.content}</li>`;
+        ${bullets.map((b, i) => {
+          const id = `${sid}-b${i + 1}`;
+          processTimings(b, id);
+          return `<li id="${id}" class="hidden ${b.classes || ""}">${b.content}</li>`;
         }).join("")}
       </ul>
 
     </section>
   `;
+
+  return { html, actions };
 }

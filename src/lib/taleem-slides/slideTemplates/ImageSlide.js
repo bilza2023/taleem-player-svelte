@@ -1,6 +1,4 @@
-import { extractRequired } from "../core/extractRequired";
-
-export function ImageSlide(data, currentShowAt = null) {
+export function ImageSlide(data) {
   const rawItems = data.data ?? [];
 
   const imageItem = rawItems.find(d => d.name === "image");
@@ -9,22 +7,28 @@ export function ImageSlide(data, currentShowAt = null) {
     throw new Error("imageSlide: requires image");
   }
 
-  const image = imageItem.content;
-  const imageClasses = imageItem.classes || "";
-  const imageShowAt = imageItem.showAt ?? 0;
+  const actions = [];
+  const sid = `s${data.start}`;
+  const imgId = `${sid}-image`;
 
-  const showImage =
-    currentShowAt === null ? true : imageShowAt <= currentShowAt;
-
-  return `
-    <section class="slide imageSlide">
-      
-      ${
-        showImage
-          ? `<img class="${imageClasses}" src="${image}" alt="" />`
-          : ``
+  if (imageItem.timings) {
+    for (const t of imageItem.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [imgId],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
       }
+    }
+  }
 
+  const html = `
+    <section class="slide imageSlide" id="${sid}">
+      <img id="${imgId}" class="hidden ${imageItem.classes || ""}" src="${imageItem.content}" alt="" />
     </section>
   `;
+
+  return { html, actions };
 }

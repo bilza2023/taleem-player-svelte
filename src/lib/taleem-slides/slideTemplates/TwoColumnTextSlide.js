@@ -1,5 +1,3 @@
-// src/templates/TwoColumnTextSlide.js
-
 export function TwoColumnTextSlide(data) {
   const leftItems = data.data?.filter(d =>
     d.name === "leftText" || d.name === "leftImage"
@@ -13,34 +11,53 @@ export function TwoColumnTextSlide(data) {
     throw new Error("twoColumnText: requires left and right content");
   }
 
-  function renderItem(item) {
-    const classes = item.classes || "";
-    const hide = item.hide === true;
+  const actions = [];
+  const sid = `s${data.start}`;
 
-    if (hide) return "";
+  function processTimings(item, id) {
+    if (!item?.timings) return;
+
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
+
+  function renderItem(item, id) {
+    processTimings(item, id);
+
+    const classes = item.classes || "";
 
     if (item.name === "leftText" || item.name === "rightText") {
-      return `<div class="${classes}">${item.content}</div>`;
+      return `<div id="${id}" class="hidden ${classes}">${item.content}</div>`;
     }
 
     if (item.name === "leftImage" || item.name === "rightImage") {
-      return `<img class="${classes}" src="${item.content}" alt="" />`;
+      return `<img id="${id}" class="hidden ${classes}" src="${item.content}" alt="" />`;
     }
 
     return "";
   }
 
-  return `
-    <section class="slide twoColumnText">
+  const html = `
+    <section class="slide twoColumnText" id="${sid}">
 
       <div class="col left">
-        ${leftItems.map(renderItem).join("")}
+        ${leftItems.map((item, i) => renderItem(item, `${sid}-l${i + 1}`)).join("")}
       </div>
 
       <div class="col right">
-        ${rightItems.map(renderItem).join("")}
+        ${rightItems.map((item, i) => renderItem(item, `${sid}-r${i + 1}`)).join("")}
       </div>
 
     </section>
   `;
+
+  return { html, actions };
 }

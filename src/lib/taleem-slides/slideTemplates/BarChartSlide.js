@@ -1,29 +1,48 @@
-export function BarChartSlide(raw, currentShowAt = null) {
+export function BarChartSlide(data) {
   function getSp(item, name) {
     return item.spItems?.find(sp => sp.name === name)?.content;
   }
 
-  const rawBars = (raw.data || []).filter(d => d.name === "bar");
+  const rawBars = (data.data || []).filter(d => d.name === "bar");
 
-  const visibleBars =
-    currentShowAt === null
-      ? rawBars
-      : rawBars.filter(b => (b.showAt ?? 0) <= currentShowAt);
+  const actions = [];
+  const sid = `s${data.start}`;
 
-  const bars = visibleBars.map(d => ({
-    label: d.content,
-    value: Number(getSp(d, "value")),
-    classes: d.classes || ""
-  }));
+  function processTimings(item, id) {
+    if (!item?.timings) return;
+
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
+
+  const bars = rawBars.map((d, i) => {
+    const id = `${sid}-bar${i + 1}`;
+    processTimings(d, id);
+
+    return {
+      id,
+      label: d.content,
+      value: Number(getSp(d, "value")),
+      classes: d.classes || ""
+    };
+  });
 
   if (!bars.length) {
-    return `<section class="slide barChart"></section>`;
+    return { html: `<section class="slide barChart"></section>`, actions };
   }
 
   const maxValue = Math.max(...bars.map(b => b.value));
 
-  return `
-    <section class="slide barChart">
+  const html = `
+    <section class="slide barChart" id="${sid}">
       <div class="bar-chart">
         
         ${bars
@@ -31,7 +50,7 @@ export function BarChartSlide(raw, currentShowAt = null) {
             const width = maxValue > 0 ? (bar.value / maxValue) * 100 : 0;
 
             return `
-              <div class="bar-row ${bar.classes}">
+              <div id="${bar.id}" class="bar-row hidden ${bar.classes}">
                 
                 <div class="bar-label">${bar.label}</div>
 
@@ -49,4 +68,6 @@ export function BarChartSlide(raw, currentShowAt = null) {
       </div>
     </section>
   `;
+
+  return { html, actions };
 }

@@ -1,21 +1,42 @@
-// TextGridSlide
-export function TextGridSlide(data, currentShowAt = null) {
+export function TextGridSlide(data) {
   const raw = data.data ?? [];
 
-  const items =
-    currentShowAt === null
-      ? raw.filter(d => d.name === "text")
-      : raw.filter(d => d.name === "text" && (d.showAt ?? 0) <= currentShowAt);
+  const actions = [];
+  const sid = `s${data.start}`;
 
-  return `
-    <section class="slide textGrid">
+  function processTimings(item, id) {
+    if (!item?.timings) return;
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
+
+  const html = `
+    <section class="slide textGrid" id="${sid}">
       <div class="text-grid">
-        ${items.map(item => `
-          <div class="text-grid-item ${item.classes || ""}">
-            ${item.content}
-          </div>
-        `).join("")}
+        ${raw
+          .filter(d => d.name === "text")
+          .map((item, i) => {
+            const id = `${sid}-t${i + 1}`;
+            processTimings(item, id);
+
+            return `
+              <div id="${id}" class="text-grid-item hidden ${item.classes || ""}">
+                ${item.content}
+              </div>
+            `;
+          })
+          .join("")}
       </div>
     </section>
   `;
+
+  return { html, actions };
 }
