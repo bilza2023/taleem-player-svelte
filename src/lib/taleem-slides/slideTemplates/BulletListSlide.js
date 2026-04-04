@@ -1,22 +1,48 @@
-// import { extractOptional } from "../core/extractOptional";
 
-export function BulletListSlide(data, slideIndex = 0) {
+export function BulletListSlide(data) {
   const rawItems = data.data ?? [];
 
   const bullets = rawItems.filter(d => d.name === "bullet");
+  const headingItem = rawItems.find(d => d.name === "heading");
 
   if (bullets.length === 0) {
     throw new Error("bulletList: requires at least one bullet");
   }
 
-  const headingItem = rawItems.find(d => d.name === "heading");
+  const actions = [];
 
-  return `
-    <section class="slide bulletList" id="s${slideIndex}">
+  const sid = `s${data.start}`; // ✅ self-contained slide id
+
+  function processTimings(item, id) {
+    if (!item?.timings) return;
+
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
+
+  const headingId = `${sid}-heading`;
+
+  if (headingItem) processTimings(headingItem, headingId);
+
+  bullets.forEach((b, i) => {
+    const id = `${sid}-b${i + 1}`;
+    processTimings(b, id);
+  });
+
+  const html = `
+    <section class="slide bulletList" id="${sid}">
 
       ${
         headingItem
-          ? `<h1 id="s${slideIndex}-heading" class="hidden ${headingItem.classes || ""}">
+          ? `<h1 id="${headingId}" class="hidden ${headingItem.classes || ""}">
               ${headingItem.content}
             </h1>`
           : ``
@@ -25,10 +51,7 @@ export function BulletListSlide(data, slideIndex = 0) {
       <ul>
         ${bullets
           .map((b, i) => `
-            <li 
-              id="s${slideIndex}-b${i + 1}" 
-              class="hidden ${b.classes || ""}"
-            >
+            <li id="${sid}-b${i + 1}" class="hidden ${b.classes || ""}">
               ${b.content}
             </li>
           `)
@@ -37,4 +60,6 @@ export function BulletListSlide(data, slideIndex = 0) {
 
     </section>
   `;
+
+  return { html, actions };
 }

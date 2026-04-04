@@ -7,14 +7,19 @@
     "backgroundImageOpacity": 0.3
   },
   "deck": [
-
     {
       "type": "titleAndSubtitle",
       "start": 0,
       "end": 5,
       "data": [
-        { "name": "title", "content": "Taleem Slides", "showAt": 0 },
-        { "name": "subtitle", "content": "A calm, structured way to present ideas", "showAt": 3 }
+        {
+          "name": "title","content": "Taleem Slides",
+          "timings": [{ "time": 0, "event": "show" }]
+        },
+        {
+          "name": "subtitle","content": "A calm, structured way to present ideas",
+          "timings": [{ "time": 3, "event": "show" }]
+        }
       ]
     },
 
@@ -23,8 +28,16 @@
       "start": 5,
       "end": 10,
       "data": [
-        { "name": "title", "content": "What is Taleem Slides?", "showAt": 5 },
-        { "name": "para", "content": "Taleem Slides is a simple system that turns structured data into clear visual slides. Each slide is predictable, controlled, and designed to help students understand ideas step by step.", "showAt": 6 }
+        {
+          "name": "title",
+          "content": "What is Taleem Slides?",
+          "timings": [{ "time": 5, "event": "show" }]
+        },
+        {
+          "name": "para",
+          "content": "Taleem Slides is a simple system that turns structured data into clear visual slides. Each slide is predictable, controlled, and designed to help students understand ideas step by step.",
+          "timings": [{ "time": 6, "event": "show" }]
+        }
       ]
     },
 
@@ -33,10 +46,10 @@
       "start": 10,
       "end": 15,
       "data": [
-        { "name": "bullet", "content": "Slides are generated from clean data", "showAt": 10 },
-        { "name": "bullet", "content": "Nothing changes behind the scenes", "showAt": 11 },
-        { "name": "bullet", "content": "The author controls what appears", "showAt": 12 },
-        { "name": "bullet", "content": "The same lesson looks the same everywhere", "showAt": 13 }
+        { "name": "bullet", "content": "Slides are generated from clean data", "timings": [{ "time": 10, "event": "show" }] },
+        { "name": "bullet", "content": "Nothing changes behind the scenes", "timings": [{ "time": 11, "event": "show" }] },
+        { "name": "bullet", "content": "The author controls what appears", "timings": [{ "time": 12, "event": "show" }] },
+        { "name": "bullet", "content": "The same lesson looks the same everywhere", "timings": [{ "time": 13, "event": "show" }] }
       ]
     },
 

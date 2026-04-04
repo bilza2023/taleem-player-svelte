@@ -1,7 +1,4 @@
-
-
-
-export function TitleAndSubtitleSlide(data, slideIndex = 0) {
+export function TitleAndSubtitleSlide(data) {
   const rawItems = data.data ?? [];
 
   const titleItem = rawItems.find(d => d.name === "title");
@@ -11,12 +8,38 @@ export function TitleAndSubtitleSlide(data, slideIndex = 0) {
     throw new Error("titleAndSubtitle: requires title");
   }
 
-  return `
-    <section class="slide titleAndSubtitle" id="s${slideIndex}">
+  const actions = [];
+  const sid = `s${data.start}`;
+
+  function processTimings(item, id) {
+    if (!item.timings) return;
+
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
+
+  const titleId = `${sid}-title`;
+  const subtitleId = `${sid}-subtitle`;
+
+  processTimings(titleItem, titleId);
+  if (subtitleItem) {
+    processTimings(subtitleItem, subtitleId);
+  }
+
+  const html = `
+    <section class="slide titleAndSubtitle" id="${sid}">
 
       <h1 
-        id="s${slideIndex}-title" 
-        class=" ${titleItem.classes || ""}"
+        id="${titleId}" 
+        class="hidden ${titleItem.classes || ""}"
       >
         ${titleItem.content}
       </h1>
@@ -25,8 +48,8 @@ export function TitleAndSubtitleSlide(data, slideIndex = 0) {
         subtitleItem
           ? `
             <h2 
-              id="s${slideIndex}-subtitle" 
-              class=" ${subtitleItem.classes || ""}"
+              id="${subtitleId}" 
+              class="hidden ${subtitleItem.classes || ""}"
             >
               ${subtitleItem.content}
             </h2>
@@ -36,4 +59,6 @@ export function TitleAndSubtitleSlide(data, slideIndex = 0) {
 
     </section>
   `;
+
+  return { html, actions };
 }

@@ -1,6 +1,4 @@
-import { extractRequired } from "../core/extractRequired";
-
-export function TitleAndParaSlide(data, currentShowAt = null) {
+export function TitleAndParaSlide(data) {
   const rawItems = data.data ?? [];
 
   const titleItem = rawItems.find(d => d.name === "title");
@@ -10,36 +8,47 @@ export function TitleAndParaSlide(data, currentShowAt = null) {
     throw new Error("titleAndPara: requires para");
   }
 
-  const title = titleItem?.content;
-  const para = paraItem.content;
+  const actions = [];
+  const sid = `s${data.start}`;
 
-  const titleShowAt = titleItem?.showAt ?? 0;
-  const paraShowAt = paraItem.showAt ?? 0;
+  function processTimings(item, id) {
+    if (!item?.timings) return;
 
-  const titleClasses = titleItem?.classes || "";
-  const paraClasses = paraItem.classes || "";
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
 
-  const showTitle =
-    currentShowAt === null ? true : titleShowAt <= currentShowAt;
+  const titleId = `${sid}-title`;
+  const paraId = `${sid}-para`;
 
-  const showPara =
-    currentShowAt === null ? true : paraShowAt <= currentShowAt;
+  processTimings(titleItem, titleId);
+  processTimings(paraItem, paraId);
 
-  return `
-    <section class="slide titleAndPara">
+  const html = `
+    <section class="slide titleAndPara" id="${sid}">
       
       ${
-        showTitle && title
-          ? `<h1 class="${titleClasses}">${title}</h1>`
+        titleItem
+          ? `<h1 id="${titleId}" class="hidden ${titleItem.classes || ""}">
+              ${titleItem.content}
+            </h1>`
           : ``
       }
 
-      ${
-        showPara
-          ? `<p class="${paraClasses}">${para}</p>`
-          : ``
-      }
+      <p id="${paraId}" class="hidden ${paraItem.classes || ""}">
+        ${paraItem.content}
+      </p>
 
     </section>
   `;
+
+  return { html, actions };
 }

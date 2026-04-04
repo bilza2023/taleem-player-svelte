@@ -3,15 +3,16 @@
   import { getDeckEndTime } from "../lib/utils/index.js";
   import { renderTaleemSlide } from "../lib/taleem-slides";
   import { runActions } from "../lib/actionRunner/runActions.js";
-  import { actions } from "../lib/actionRunner/actions.js";
- 
+  // import { actions } from "../lib/actionRunner/actions.js";
+
   import SyllabusBar from "./SyllabusBar.svelte";
 
   export let deck;
   export let timer;
-  let deckEndTime=0;
+  let deckEndTime = 0;
 
   let html = "";
+  let actions = [];
   let currentTime = 0;
   let showSidebar = true;
   export let links = [];
@@ -40,24 +41,27 @@
   }
 
   onMount(async () => {
-   deckEndTime = getDeckEndTime(deck);
+    deckEndTime = getDeckEndTime(deck);
   });
 
   // --- time loop ---
   setInterval(() => {
-  if (!timer) return;
-  currentTime = timer.now();
-  runActions(actions, currentTime);
-}, 100);
+    if (!timer) return;
+    currentTime = timer.now();
+    runActions(actions, currentTime);
+  }, 100);
 
   // --- reactive render ---
   $: if (deck) {
-    html = renderTaleemSlide(deck.deck[0]);
+    // html = renderTaleemSlide(deck.deck[0]);
+    const result = renderTaleemSlide(deck.deck[2]);
+    debugger;
+    html = result.html;
+    actions = result.actions;
   }
 </script>
 
 <div class="root">
-
   <div class="left">
     <div class="stage">
       {@html html}
@@ -65,7 +69,6 @@
 
     <!-- ============= Bottom NavBar ============= -->
     <div class="navbar">
-      
       <!-- controls -->
       <div class="controls">
         <button on:click={handlePlayBtn}>▶</button>
@@ -73,41 +76,37 @@
         <button on:click={handleStopBtn}>⏹</button>
         <span class="time">{currentTime.toFixed(1)}/{deckEndTime}s</span>
       </div>
-      
+
       <!-- scrub -->
       <div class="scrub-wrap">
         <input
           type="range"
           min="0"
-          max= {deckEndTime - 1}
+          max={deckEndTime - 1}
           step="1"
-          value={ currentTime || 0}
+          value={currentTime || 0}
           on:input={handleScrub}
         />
       </div>
-      
+
       <!-- right -->
       <div class="right">
         <a href="/">←</a>
         <button on:click={toggleSidebar}>▥</button>
       </div>
-      
     </div>
     <!-- ============= Bottom NavBar ============= -->
-
   </div>
 
   <div class="sidebar" class:hidden={!showSidebar}>
     <SyllabusBar {links} />
   </div>
-
 </div>
 
 <style>
   @import "/css/themes/dark.css";
   @import "../css/index.css";
   @import "/css/app.css";
-
 
   :global(body) {
     margin: 0;
