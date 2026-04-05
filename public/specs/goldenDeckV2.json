@@ -166,9 +166,30 @@
       "start": 140,
       "end": 150,
       "data": [
-        { "name": "heading", "content": "Structured Explanation", "timings": [{ "time": 140, "event": "show" }] },
-        { "name": "math", "content": "$(a + b)^2 = (a + b)(a + b)$", "timings": [{ "time": 143, "event": "show" }] },
-        { "name": "math", "content": "$= a^2 + 2ab + b^2$", "timings": [{ "time": 146, "event": "show" }] }
+        { "name": "heading", 
+        "content": "Structured Explanation",
+        "timings": [{ "time": 140, "event": "show" }] , 
+        "spItems": [
+          { "name": "text", "content": "This is the first like " },
+          { "name": "image", "content": "image.png" }
+        ]
+      },
+        { "name": "math", 
+        "content": "$(a + b)^2 = (a + b)(a + b)$", 
+        "timings": [{ "time": 143, "event": "show" }],
+        "spItems": [
+          { "name": "text", "content": "2nd line side panel content" },
+          { "name": "image", "content": "box.webp" }
+        ] 
+      },
+      { "name": "math", 
+        "content": "$= a^2 + 2ab + b^2$", 
+        "timings": [{ "time": 146, "event": "show" }],
+      "spItems": [
+          { "name": "text", "content": "This is spItem of the third line." },
+          { "name": "image", "content": "image.png" }
+        ]
+      }
       ]
     },
 

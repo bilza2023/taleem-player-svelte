@@ -1,71 +1,102 @@
-export function EqSlide(data) {
-  const lines = data.data ?? [];
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
 
-  if (!lines.length) {
+export function EqSlide(data) {
+  const rawItems = data.data ?? [];
+
+  if (!rawItems.length) {
     throw new Error("eq: requires lines");
   }
 
+  const items = addIdToItems(rawItems);
+
+  // 🔹 collect lines + spItems
+  const lines = items.map(line => {
+    const spItems = (line.spItems || []).map((sp, i) => ({
+      ...sp,
+      id: `${line.id}-sp-${i + 1}` // stable id (no random)
+    }));
+
+    return {
+      ...line,
+      spItems
+    };
+  });
+
+  const timeline = extractTimeline(items);
+
+  const lineIds = lines.map(l => l.id);
+  const spIds = lines.flatMap(l => l.spItems.map(sp => sp.id));
+
   const actions = [];
-  const sid = `s${data.start}`;
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
+  for (const step of timeline) {
+    const focusId = step.id;
 
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
+    const dimIds = lineIds.filter(id => id !== focusId);
+
+    const currentLine = lines.find(l => l.id === focusId);
+
+    const visibleSp = currentLine?.spItems.map(sp => sp.id) || [];
+
+    const hiddenSp = spIds.filter(id => !visibleSp.includes(id));
+
+    actions.push({
+      time: step.time,
+      state: {
+        focus: [focusId],
+        dim: dimIds,
+        visible: visibleSp,
+        hidden: hiddenSp
       }
-    }
+    });
   }
 
   const html = `
-    <section class="slide eq" id="${sid}">
-      
-      <ul class="eq-lines">
-        ${lines.map((line, i) => {
-          const id = `${sid}-line${i + 1}`;
-          processTimings(line, id);
+  <section class="slide eq">
 
-          return `
-            <li id="${id}" class="eq-line hidden ${line.classes || ""}">
-              ${line.content}
-            </li>
-          `;
-        }).join("")}
-      </ul>
+    <ul class="eq-lines">
+      ${lines.map(line => `
+        <li 
+          id="${line.id}" 
+          class="eq-line ${line.classes || ""}"
+        >
+          ${line.content}
+        </li>
+      `).join("")}
+    </ul>
 
-      <div class="eq-side-panel">
-        ${lines.map((line, i) => {
-          const spItems = line.spItems ?? [];
-
-          return spItems.map((item, j) => {
-            const id = `${sid}-sp${i + 1}-${j + 1}`;
-            processTimings(line, id);
-
-            if (item.name === "image") {
-              return `
-                <div id="${id}" class="eq-explain-item eq-explain-image hidden">
-                  <img src="${item.content}" />
-                </div>
-              `;
-            }
-
+    <div class="eq-side-panel">
+      ${lines.map(line =>
+        line.spItems.map(sp => {
+          if (sp.name === "image") {
             return `
-              <div id="${id}" class="eq-explain-item hidden">
-                ${item.content}
+              <div id="${sp.id}" class="eq-explain-item hidden">
+                <img src="${sp.content}" />
               </div>
             `;
-          }).join("");
-        }).join("")}
-      </div>
+          }
 
-    </section>
-  `;
+          return `
+            <div id="${sp.id}" class="eq-explain-item hidden">
+              ${sp.content}
+            </div>
+          `;
+        }).join("")
+      ).join("")}
+    </div>
 
-  return { html, actions };
+  </section>
+`;
+
+  return {
+    html,
+    actions,
+    groups: {
+      focus: [],
+      dim: ["dim"],
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

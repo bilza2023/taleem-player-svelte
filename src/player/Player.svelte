@@ -130,9 +130,43 @@
   @import "../css/index.css";
   @import "/css/app.css";
 
-  .hidden {
+  .correct {
+  border: 2px solid #4caf50;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+/* wrong answer */
+.wrong {
+  border: 2px solid #f44336;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.remove {
+  display:none
+}
+/* dimmed items */
+.dim {
+  opacity: 0.35;
+  transform: scale(0.98);
+}
+
+/* optional future */
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* core classes */
+.hidden {
+  opacity: 0;
+  transform: translateY(8px);
+}
+  /* .hidden {
     display: none;
-  }
+  } */
 
   :global(body) {
     margin: 0;

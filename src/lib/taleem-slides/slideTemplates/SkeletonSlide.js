@@ -1,42 +1,55 @@
-export function SkeletonSlide(data) {
-  const items = data.data ?? [];
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
 
-  if (!items.length) {
+export function SkeletonSlide(data) {
+  const rawItems = data.data ?? [];
+
+  if (!rawItems.length) {
     throw new Error("skeleton: requires items");
   }
 
-  const actions = [];
-  const sid = `s${data.start}`;
+  const items = addIdToItems(rawItems);
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
+  // 🔹 timeline
+  const timeline = extractTimeline(items);
+
+  // 🔹 one-at-a-time actions (active/remove)
+  const actions = [];
+
+  const allIds = items.map(i => i.id);
+
+  for (const step of timeline) {
+    const activeId = step.id;
+
+    const removeIds = allIds.filter(id => id !== activeId);
+
+    actions.push({
+      time: step.time,
+      state: {
+        active: [activeId],
+        remove: removeIds
       }
-    }
+    });
   }
 
-  function renderItem(item, i) {
-    const id = `${sid}-${item.name}${i}`;
-    processTimings(item, id);
+  function renderItem(item) {
+    const id = item.id;
 
     if (item.name === "title") {
-      return `<h1 id="${id}" class="hidden ${item.classes || ""}">${item.content}</h1>`;
+      return `<h1 id="${id}" class="remove ${item.classes || ""}">
+        ${item.content}
+      </h1>`;
     }
 
     if (item.name === "para") {
-      return `<p id="${id}" class="hidden ${item.classes || ""}">${item.content}</p>`;
+      return `<p id="${id}" class="remove ${item.classes || ""}">
+        ${item.content}
+      </p>`;
     }
 
     if (item.name === "image") {
       return `
-        <div id="${id}" class="skeleton-image hidden ${item.classes || ""}">
+        <div id="${id}" class="skeleton-image remove ${item.classes || ""}">
           <img src="${item.content}" />
         </div>
       `;
@@ -46,12 +59,21 @@ export function SkeletonSlide(data) {
   }
 
   const html = `
-    <section class="slide skeleton" id="${sid}">
+    <section class="slide skeleton">
+
       <div class="skeleton-body">
         ${items.map(renderItem).join("")}
       </div>
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      active: [],
+      remove: ["remove"]
+    }
+  };
 }
