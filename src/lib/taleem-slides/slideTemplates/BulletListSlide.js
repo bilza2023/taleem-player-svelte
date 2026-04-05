@@ -1,65 +1,63 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
 
 export function BulletListSlide(data) {
   const rawItems = data.data ?? [];
 
-  const bullets = rawItems.filter(d => d.name === "bullet");
-  const headingItem = rawItems.find(d => d.name === "heading");
+  const items = addIdToItems(rawItems);
+
+  const bullets = items.filter(d => d.name === "bullet");
+  const headingItem = items.find(d => d.name === "heading");
 
   if (bullets.length === 0) {
     throw new Error("bulletList: requires at least one bullet");
   }
 
-  const actions = [];
-
-  const sid = `s${data.start}`; // ✅ self-contained slide id
-
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
-  }
-
-  const headingId = `${sid}-heading`;
-
-  if (headingItem) processTimings(headingItem, headingId);
-
-  bullets.forEach((b, i) => {
-    const id = `${sid}-b${i + 1}`;
-    processTimings(b, id);
-  });
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
   const html = `
-    <section class="slide bulletList" id="${sid}">
+    <section class="slide bulletList">
 
       ${
         headingItem
-          ? `<h1 id="${headingId}" class="hidden ${headingItem.classes || ""}">
+          ? `
+            <h1 
+              id="${headingItem.id}" 
+              class="hidden ${headingItem.classes || ""}"
+            >
               ${headingItem.content}
-            </h1>`
+            </h1>
+          `
           : ``
       }
 
       <ul>
         ${bullets
-          .map((b, i) => `
-            <li id="${sid}-b${i + 1}" class="hidden ${b.classes || ""}">
+          .map(
+            b => `
+            <li 
+              id="${b.id}" 
+              class="hidden ${b.classes || ""}"
+            >
               ${b.content}
             </li>
-          `)
+          `
+          )
           .join("")}
       </ul>
 
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

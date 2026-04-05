@@ -1,46 +1,58 @@
+// ImageRightBulletsLeftSlide
+
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function ImageRightBulletsLeftSlide(data) {
-  const raw = data.data ?? [];
+  const rawItems = data.data ?? [];
 
-  const img = raw.find(d => d.name === "image");
-  const bullets = raw.filter(d => d.name === "bullet");
+  const items = addIdToItems(rawItems);
 
-  const actions = [];
-  const sid = `s${data.start}`;
-  const imgId = `${sid}-image`;
+  const imgItem = items.find(d => d.name === "image");
+  const bullets = items.filter(d => d.name === "bullet");
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
+  if (!imgItem || bullets.length === 0) {
+    throw new Error("imageRightBulletsLeft: requires image and bullets");
   }
 
-  if (img) processTimings(img, imgId);
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
   const html = `
-    <section class="slide imageRightBulletsLeft" id="${sid}">
+    <section class="slide imageRightBulletsLeft">
 
       <ul>
         ${bullets
-          .map((b, i) => {
-            const id = `${sid}-b${i + 1}`;
-            processTimings(b, id);
-            return `<li id="${id}" class="hidden ${b.classes || ""}">${b.content}</li>`;
-          })
+          .map(
+            b => `
+            <li 
+              id="${b.id}" 
+              class="hidden ${b.classes || ""}"
+            >
+              ${b.content}
+            </li>
+          `
+          )
           .join("")}
       </ul>
 
-      <img id="${imgId}" class="hidden ${img?.classes || ""}" src="${img?.content}" />
+      <img 
+        id="${imgItem.id}" 
+        class="hidden ${imgItem.classes || ""}" 
+        src="${imgItem.content}" 
+      />
 
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

@@ -1,41 +1,37 @@
-export function TableSlide(data) {
-  const items = data.data ?? [];
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
 
-  if (!Array.isArray(items) || items.length === 0) {
+export function TableSlide(data) {
+  const rawItems = data.data ?? [];
+
+  if (!Array.isArray(rawItems) || rawItems.length === 0) {
     throw new Error("table: requires rows");
   }
 
-  const actions = [];
-  const sid = `s${data.start}`;
+  const items = addIdToItems(rawItems);
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
+  const rows = items.filter(d => d.name === "row");
+
+  if (!rows.length) {
+    throw new Error("table: requires row items");
   }
 
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
+
   const html = `
-    <section class="slide table" id="${sid}">
+    <section class="slide table">
+
       <table>
         <tbody>
-          ${items
-            .filter(item => item.name === "row")
-            .map((item, i) => {
-              const id = `${sid}-row${i + 1}`;
-              processTimings(item, id);
-
-              const cells = item.content.split(",").map(s => s.trim());
+          ${rows
+            .map(row => {
+              const cells = row.content.split(",").map(s => s.trim());
 
               return `
-                <tr id="${id}" class="hidden ${item.classes || ""}">
+                <tr id="${row.id}" class="hidden ${row.classes || ""}">
                   ${cells.map(cell => `<td>${cell}</td>`).join("")}
                 </tr>
               `;
@@ -43,8 +39,16 @@ export function TableSlide(data) {
             .join("")}
         </tbody>
       </table>
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

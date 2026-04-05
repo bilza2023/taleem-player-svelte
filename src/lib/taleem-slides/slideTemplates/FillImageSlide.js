@@ -1,34 +1,40 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function FillImageSlide(data) {
-  const raw = data.data ?? [];
+  const rawItems = data.data ?? [];
 
-  const img = raw.find(d => d.name === "image");
+  const items = addIdToItems(rawItems);
 
-  if (!img?.content) {
+  const imageItem = items.find(d => d.name === "image");
+
+  if (!imageItem?.content) {
     throw new Error("fillImage: image required");
   }
 
-  const actions = [];
-  const sid = `s${data.start}`;
-  const imgId = `${sid}-image`;
-
-  if (img.timings) {
-    for (const t of img.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [imgId],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
-  }
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
   const html = `
-    <section class="slide fillImage" id="${sid}">
-      <img id="${imgId}" class="hidden ${img.classes || ""}" src="${img.content}" />
+    <section class="slide fillImage">
+
+      <img 
+        id="${imageItem.id}" 
+        class="hidden ${imageItem.classes || ""}" 
+        src="${imageItem.content}" 
+      />
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

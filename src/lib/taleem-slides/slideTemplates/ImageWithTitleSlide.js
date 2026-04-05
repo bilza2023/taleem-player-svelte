@@ -1,39 +1,56 @@
+// ImageWithTitleSlide
+
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function ImageWithTitleSlide(data) {
-  const raw = data.data ?? [];
+  const rawItems = data.data ?? [];
 
-  const img = raw.find(d => d.name === "image");
-  const title = raw.find(d => d.name === "title");
+  const items = addIdToItems(rawItems);
 
-  const actions = [];
-  const sid = `s${data.start}`;
-  const imgId = `${sid}-image`;
-  const titleId = `${sid}-title`;
+  const titleItem = items.find(d => d.name === "title");
+  const imgItem = items.find(d => d.name === "image");
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
+  if (!imgItem) {
+    throw new Error("imageWithTitle: requires image");
   }
 
-  if (title) processTimings(title, titleId);
-  if (img) processTimings(img, imgId);
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
   const html = `
-    <section class="slide imageWithTitle" id="${sid}">
-      <h1 id="${titleId}" class="hidden ${title?.classes || ""}">
-        ${title?.content || ""}
-      </h1>
-      <img id="${imgId}" class="hidden ${img?.classes || ""}" src="${img?.content}" />
+    <section class="slide imageWithTitle">
+
+      ${
+        titleItem
+          ? `
+            <h1 
+              id="${titleItem.id}" 
+              class="hidden ${titleItem.classes || ""}"
+            >
+              ${titleItem.content}
+            </h1>
+          `
+          : ``
+      }
+
+      <img 
+        id="${imgItem.id}" 
+        class="hidden ${imgItem.classes || ""}" 
+        src="${imgItem.content}" 
+      />
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

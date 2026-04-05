@@ -1,40 +1,50 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function ImageGridSlide(data) {
-  const raw = data.data ?? [];
+  const rawItems = data.data ?? [];
 
-  const images = raw.filter(d => d.name === "image");
+  const items = addIdToItems(rawItems);
 
-  const actions = [];
-  const sid = `s${data.start}`;
+  const images = items.filter(d => d.name === "image");
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
+  if (!images.length) {
+    throw new Error("imageGrid: requires at least one image");
   }
 
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
+
   const html = `
-    <section class="slide imageGrid" id="${sid}">
+    <section class="slide imageGrid">
+
       <div class="image-grid">
-        ${images.map((img, i) => {
-          const id = `${sid}-img${i + 1}`;
-          processTimings(img, id);
-          return `
+        ${images
+          .map(
+            img => `
             <div class="image-grid-item">
-              <img id="${id}" class="hidden ${img.classes || ""}" src="${img.content}" />
+              <img 
+                id="${img.id}" 
+                class="hidden ${img.classes || ""}" 
+                src="${img.content}" 
+              />
             </div>
-          `;
-        }).join("")}
+          `
+          )
+          .join("")}
       </div>
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

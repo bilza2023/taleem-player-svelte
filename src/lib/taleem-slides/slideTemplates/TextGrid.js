@@ -1,42 +1,49 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function TextGridSlide(data) {
-  const raw = data.data ?? [];
+  const rawItems = data.data ?? [];
 
-  const actions = [];
-  const sid = `s${data.start}`;
+  const items = addIdToItems(rawItems);
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
+  const texts = items.filter(d => d.name === "text");
+
+  if (!texts.length) {
+    throw new Error("textGrid: requires text items");
   }
 
-  const html = `
-    <section class="slide textGrid" id="${sid}">
-      <div class="text-grid">
-        ${raw
-          .filter(d => d.name === "text")
-          .map((item, i) => {
-            const id = `${sid}-t${i + 1}`;
-            processTimings(item, id);
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
-            return `
-              <div id="${id}" class="text-grid-item hidden ${item.classes || ""}">
-                ${item.content}
-              </div>
-            `;
-          })
+  const html = `
+    <section class="slide textGrid">
+
+      <div class="text-grid">
+        ${texts
+          .map(
+            t => `
+            <div 
+              id="${t.id}" 
+              class="text-grid-item hidden ${t.classes || ""}"
+            >
+              ${t.content}
+            </div>
+          `
+          )
           .join("")}
       </div>
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

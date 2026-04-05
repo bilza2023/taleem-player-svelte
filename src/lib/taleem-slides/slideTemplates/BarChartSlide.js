@@ -1,51 +1,47 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function BarChartSlide(data) {
   function getSp(item, name) {
     return item.spItems?.find(sp => sp.name === name)?.content;
   }
 
-  const rawBars = (data.data || []).filter(d => d.name === "bar");
+  const rawItems = data.data ?? [];
+  const items = addIdToItems(rawItems);
 
-  const actions = [];
-  const sid = `s${data.start}`;
-
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
-  }
-
-  const bars = rawBars.map((d, i) => {
-    const id = `${sid}-bar${i + 1}`;
-    processTimings(d, id);
-
-    return {
-      id,
-      label: d.content,
-      value: Number(getSp(d, "value")),
-      classes: d.classes || ""
-    };
-  });
+  const bars = items.filter(d => d.name === "bar");
 
   if (!bars.length) {
-    return { html: `<section class="slide barChart"></section>`, actions };
+    return {
+      html: `<section class="slide barChart"></section>`,
+      actions: [],
+      groups: {
+        visible: [],
+        hidden: ["hidden"]
+      }
+    };
   }
 
-  const maxValue = Math.max(...bars.map(b => b.value));
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
+
+  const barsData = bars.map(d => ({
+    id: d.id,
+    label: d.content,
+    value: Number(getSp(d, "value")),
+    classes: d.classes || ""
+  }));
+
+  const maxValue = Math.max(...barsData.map(b => b.value));
 
   const html = `
-    <section class="slide barChart" id="${sid}">
+    <section class="slide barChart">
+
       <div class="bar-chart">
         
-        ${bars
+        ${barsData
           .map(bar => {
             const width = maxValue > 0 ? (bar.value / maxValue) * 100 : 0;
 
@@ -66,8 +62,16 @@ export function BarChartSlide(data) {
           .join("")}
 
       </div>
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

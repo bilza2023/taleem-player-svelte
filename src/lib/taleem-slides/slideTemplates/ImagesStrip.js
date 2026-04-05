@@ -1,55 +1,50 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function ImageStripSlide(data) {
-  const raw = data.data ?? [];
+  const rawItems = data.data ?? [];
 
-  const imagesRaw = raw.filter(d => d.name === "image");
+  const items = addIdToItems(rawItems);
 
-  const actions = [];
-  const sid = `s${data.start}`;
+  const images = items.filter(d => d.name === "image");
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
+  if (images.length === 0) {
+    throw new Error("imageStrip: requires at least one image");
   }
 
-  // 🔥 normalize like other slides
-  const images = imagesRaw.map((img, i) => {
-    const id = `${sid}-img${i + 1}`;
-    processTimings(img, id);
-
-    return {
-      id,
-      src: img.content,
-      classes: img.classes || ""
-    };
-  });
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
   const html = `
-    <section class="slide imageStrip" id="${sid}">
+    <section class="slide imageStrip">
+
       <div class="image-strip">
-
-        ${images.map(img => `
-          <div class="image-strip-item">
-            <img 
-              id="${img.id}" 
-              class="hidden ${img.classes}" 
-              src="${img.src}" 
-            />
-          </div>
-        `).join("")}
-
+        ${images
+          .map(
+            img => `
+            <div class="image-strip-item">
+              <img 
+                id="${img.id}" 
+                class="hidden ${img.classes || ""}" 
+                src="${img.content}" 
+              />
+            </div>
+          `
+          )
+          .join("")}
       </div>
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

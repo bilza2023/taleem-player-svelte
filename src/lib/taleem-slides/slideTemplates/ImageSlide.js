@@ -1,34 +1,41 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function ImageSlide(data) {
   const rawItems = data.data ?? [];
 
-  const imageItem = rawItems.find(d => d.name === "image");
+  const items = addIdToItems(rawItems);
+
+  const imageItem = items.find(d => d.name === "image");
 
   if (!imageItem) {
     throw new Error("imageSlide: requires image");
   }
 
-  const actions = [];
-  const sid = `s${data.start}`;
-  const imgId = `${sid}-image`;
-
-  if (imageItem.timings) {
-    for (const t of imageItem.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [imgId],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
-  }
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
   const html = `
-    <section class="slide imageSlide" id="${sid}">
-      <img id="${imgId}" class="hidden ${imageItem.classes || ""}" src="${imageItem.content}" alt="" />
+    <section class="slide imageSlide">
+
+      <img 
+        id="${imageItem.id}" 
+        class="hidden ${imageItem.classes || ""}" 
+        src="${imageItem.content}" 
+        alt="" 
+      />
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

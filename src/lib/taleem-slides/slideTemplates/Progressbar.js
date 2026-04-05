@@ -1,41 +1,45 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function Progressbar(data) {
   function getSp(item, name) {
     return item.spItems?.find(sp => sp.name === name)?.content;
   }
 
-  const items = data.data ?? [];
+  const rawItems = data.data ?? [];
+  const items = addIdToItems(rawItems);
 
-  const actions = [];
-  const sid = `s${data.start}`;
+  const bars = items.filter(d => d.name === "progress");
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
+  if (!bars.length) {
+    return {
+      html: `<section class="slide progressbar"></section>`,
+      actions: [],
+      groups: {
+        visible: [],
+        hidden: ["hidden"]
       }
-    }
+    };
   }
 
-  const html = `
-    <section class="slide progressbar" id="${sid}">
-      ${items
-        .filter(d => d.name === "progress")
-        .map((d, i) => {
-          const id = `${sid}-p${i + 1}`;
-          processTimings(d, id);
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
-          const value = Math.max(0, Math.min(100, Number(getSp(d, "value") ?? 0)));
+  const html = `
+    <section class="slide progressbar">
+
+      ${bars
+        .map(b => {
+          const value = Math.max(
+            0,
+            Math.min(100, Number(getSp(b, "value") ?? 0))
+          );
 
           return `
-            <div id="${id}" class="progressbar-item hidden ${d.classes || ""}">
-              <div class="progressbar-label">${d.content}</div>
+            <div id="${b.id}" class="progressbar-item hidden ${b.classes || ""}">
+              <div class="progressbar-label">${b.content}</div>
               <div class="progressbar-track">
                 <div class="progressbar-fill" style="width:${value}%"></div>
               </div>
@@ -43,8 +47,16 @@ export function Progressbar(data) {
           `;
         })
         .join("")}
+
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

@@ -1,39 +1,56 @@
+// ImageWithCaptionSlide
+
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { buildSequentialStates } from "../renders/buildSequentialStates.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
+
 export function ImageWithCaptionSlide(data) {
-  const raw = data.data ?? [];
+  const rawItems = data.data ?? [];
 
-  const img = raw.find(d => d.name === "image");
-  const cap = raw.find(d => d.name === "caption");
+  const items = addIdToItems(rawItems);
 
-  const actions = [];
-  const sid = `s${data.start}`;
-  const imgId = `${sid}-image`;
-  const capId = `${sid}-caption`;
+  const imgItem = items.find(d => d.name === "image");
+  const capItem = items.find(d => d.name === "caption");
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
-      }
-    }
+  if (!imgItem) {
+    throw new Error("imageWithCaption: requires image");
   }
 
-  if (img) processTimings(img, imgId);
-  if (cap) processTimings(cap, capId);
+  const allIds = items.map(i => i.id);
+  const timeline = extractTimeline(items);
+  const actions = buildSequentialStates(timeline, allIds);
 
   const html = `
-    <figure class="slide imageWithCaption" id="${sid}">
-      <img id="${imgId}" class="hidden ${img?.classes || ""}" src="${img?.content}" />
-      <figcaption id="${capId}" class="hidden ${cap?.classes || ""}">
-        ${cap?.content || ""}
-      </figcaption>
+    <figure class="slide imageWithCaption">
+
+      <img 
+        id="${imgItem.id}" 
+        class="hidden ${imgItem.classes || ""}" 
+        src="${imgItem.content}" 
+      />
+
+      ${
+        capItem
+          ? `
+            <figcaption 
+              id="${capItem.id}" 
+              class="hidden ${capItem.classes || ""}"
+            >
+              ${capItem.content}
+            </figcaption>
+          `
+          : ``
+      }
+
     </figure>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      visible: [],
+      hidden: ["hidden"]
+    }
+  };
 }

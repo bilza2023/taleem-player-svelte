@@ -1,55 +1,79 @@
+import { extractTimeline } from "../renders/extractTimeline.js";
+import { addIdToItems } from "../helpers/addIdToItems.js";
 
 export function FocusListSlide(data) {
-  const raw = data.data ?? [];
+  const rawItems = data.data ?? [];
+  const items = addIdToItems(rawItems);
 
-  const bullets = raw.filter(d => d.name === "bullet");
-  const headingItem = raw.find(d => d.name === "heading");
+  const bullets = items.filter(d => d.name === "bullet");
+  const headingItem = items.find(d => d.name === "heading");
 
   if (!bullets.length) {
     throw new Error("focusList: requires bullets");
   }
 
-  const actions = [];
-  const sid = `s${data.start}`;
-  const headingId = `${sid}-heading`;
+  // 🔹 timeline (same)
+  const timeline = extractTimeline(items);
 
-  function processTimings(item, id) {
-    if (!item?.timings) return;
-    for (const t of item.timings) {
-      if (t.event === "show") {
-        actions.push({
-          time: t.time,
-          targets: [id],
-          action: "removeClass",
-          classes: ["hidden"]
-        });
+  // 🔹 build focus/dim actions (NOT sequentialStates)
+  const actions = [];
+
+  for (const step of timeline) {
+    const focusId = step.id;
+
+    const dimIds = bullets
+      .map(b => b.id)
+      .filter(id => id !== focusId);
+
+    actions.push({
+      time: step.time,
+      state: {
+        focus: [focusId],
+        dim: dimIds
       }
-    }
+    });
   }
 
-  if (headingItem) processTimings(headingItem, headingId);
-
   const html = `
-    <section class="slide focusList" id="${sid}">
+    <section class="slide focusList">
 
       ${
         headingItem
-          ? `<h1 id="${headingId}" class="hidden ${headingItem.classes || ""}">
+          ? `
+            <h1 
+              id="${headingItem.id}" 
+              class="${headingItem.classes || ""}"
+            >
               ${headingItem.content}
-            </h1>`
+            </h1>
+          `
           : ``
       }
 
       <ul>
-        ${bullets.map((b, i) => {
-          const id = `${sid}-b${i + 1}`;
-          processTimings(b, id);
-          return `<li id="${id}" class="hidden ${b.classes || ""}">${b.content}</li>`;
-        }).join("")}
+        ${bullets
+          .map(
+            b => `
+            <li 
+              id="${b.id}" 
+              class="${b.classes || ""}"
+            >
+              ${b.content}
+            </li>
+          `
+          )
+          .join("")}
       </ul>
 
     </section>
   `;
 
-  return { html, actions };
+  return {
+    html,
+    actions,
+    groups: {
+      focus: [],
+      dim: ["dim"]
+    }
+  };
 }

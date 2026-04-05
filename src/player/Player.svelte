@@ -15,9 +15,7 @@
   let root;
   let html = "";
   let actions = [];
-  let groups =  {
-    visible: []
-  };
+  let groups = {};
 
   let currentTime = 0;
   let currentSlide = null;
