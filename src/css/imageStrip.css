@@ -27,3 +27,18 @@
     object-fit: contain;
   }
   
+  .image-strip-item img {
+    opacity: 0;
+  }
+  
+  .image-strip-item img:not(.hidden) {
+    opacity: 1;
+  }
+
+  .image-strip-item img {
+    opacity: 0;
+  }
+  
+  .image-strip-item img:not(.hidden) {
+    opacity: 1;
+  }

@@ -202,7 +202,9 @@
         { "name": "image", "content": "box.webp", "timings": [{ "time": 170, "event": "show" }] },
         { "name": "image", "content": "image.png", "timings": [{ "time": 172, "event": "show" }] },
         { "name": "image", "content": "box.webp", "timings": [{ "time": 174, "event": "show" }] },
-        { "name": "image", "content": "image.png", "timings": [{ "time": 176, "event": "show" }] }
+        { "name": "image", "content": "box.webp", "timings": [{ "time": 176, "event": "show" }] },
+        { "name": "image", "content": "whatisforce.webp", "timings": [{ "time": 177, "event": "show" }] },
+        { "name": "image", "content": "image.png", "timings": [{ "time": 178, "event": "show" }] }
       ]
     },
 

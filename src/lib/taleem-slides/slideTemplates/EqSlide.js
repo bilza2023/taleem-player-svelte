@@ -1,30 +1,38 @@
-// EqSlide
-export function EqSlide(raw, currentShowAt = null) {
-  const lines = raw.data ?? [];
+export function EqSlide(data) {
+  const lines = data.data ?? [];
 
   if (!lines.length) {
     throw new Error("eq: requires lines");
   }
 
-  const activeLine =
-    currentShowAt === null
-      ? lines[0]
-      : lines.find(l => (l.showAt ?? 0) === currentShowAt) || lines[0];
+  const actions = [];
+  const sid = `s${data.start}`;
 
-  const spItems = activeLine?.spItems ?? [];
+  function processTimings(item, id) {
+    if (!item?.timings) return;
 
-  return `
-    <section class="slide eq">
+    for (const t of item.timings) {
+      if (t.event === "show") {
+        actions.push({
+          time: t.time,
+          targets: [id],
+          action: "removeClass",
+          classes: ["hidden"]
+        });
+      }
+    }
+  }
+
+  const html = `
+    <section class="slide eq" id="${sid}">
       
       <ul class="eq-lines">
-        ${lines.map(line => {
-          const isActive =
-            currentShowAt !== null && (line.showAt ?? 0) === currentShowAt;
-
-          const stateClass = isActive ? "highlighted" : "";
+        ${lines.map((line, i) => {
+          const id = `${sid}-line${i + 1}`;
+          processTimings(line, id);
 
           return `
-            <li class="eq-line ${line.classes || ""} ${stateClass}">
+            <li id="${id}" class="eq-line hidden ${line.classes || ""}">
               ${line.content}
             </li>
           `;
@@ -32,23 +40,32 @@ export function EqSlide(raw, currentShowAt = null) {
       </ul>
 
       <div class="eq-side-panel">
-        ${spItems.map(item => {
-          if (item.name === "image") {
+        ${lines.map((line, i) => {
+          const spItems = line.spItems ?? [];
+
+          return spItems.map((item, j) => {
+            const id = `${sid}-sp${i + 1}-${j + 1}`;
+            processTimings(line, id);
+
+            if (item.name === "image") {
+              return `
+                <div id="${id}" class="eq-explain-item eq-explain-image hidden">
+                  <img src="${item.content}" />
+                </div>
+              `;
+            }
+
             return `
-              <div class="eq-explain-item eq-explain-image">
-                <img src="${item.content}" />
+              <div id="${id}" class="eq-explain-item hidden">
+                ${item.content}
               </div>
             `;
-          }
-
-          return `
-            <div class="eq-explain-item">
-              ${item.content}
-            </div>
-          `;
+          }).join("");
         }).join("")}
       </div>
 
     </section>
   `;
+
+  return { html, actions };
 }

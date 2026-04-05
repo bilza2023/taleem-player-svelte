@@ -53,10 +53,6 @@ export function TitleAndSubtitleSlide(data) {
 
     </section>
   `;
-//  console.log("{ html, actions }" ,{ html, actions });
-  return { html, actions,
-    groups : {
-    visible: [],
-    hidden: ["hidden"]
-  } };
+
+  return { html, actions };
 }

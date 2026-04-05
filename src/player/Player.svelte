@@ -2,17 +2,23 @@
   import { onMount } from "svelte";
   import { getDeckEndTime } from "../lib/utils/index.js";
   import { renderTaleemSlide } from "../lib/taleem-slides";
-  import { runActions } from "../lib/actionRunner/runActions.js";
+  // import { runActions } from "../lib/actionRunner/runActions.js";
+  import { runActions } from "taleem-action-runner";
   import { getSlideAtTime } from "../lib/utils/getSlideAtTime.js";
 
   import SyllabusBar from "./SyllabusBar.svelte";
 
   export let deck;
   export let timer;
+ 
   let deckEndTime = 0;
-
+  let root;
   let html = "";
   let actions = [];
+  let groups =  {
+    visible: []
+  };
+
   let currentTime = 0;
   let currentSlide = null;
   let showSidebar = true;
@@ -46,39 +52,42 @@
   });
 
   // --- time loop ---
-  setInterval(() => {
-  if (!timer || !deck) return;
+  let interval = setInterval(() => {
+    if (!timer || !deck) return;
 
-  currentTime = timer.now();
-
-  const slide = getSlideAtTime(deck, currentTime);
-
-  if (slide !== currentSlide) {
-    currentSlide = slide;
-
-    if (slide) {
-      const result = renderTaleemSlide(slide);
-      html = result.html;
-      actions = result.actions;
+    if (deckEndTime < currentTime) {
+      clearInterval(interval);
     }
-  }
+    currentTime = timer.now();
 
-  runActions(actions, currentTime);
-}, 100);
+    const slide = getSlideAtTime(deck, currentTime);
+
+    if (slide !== currentSlide) {
+      currentSlide = slide;
+
+      if (slide) {
+        const result = renderTaleemSlide(slide);
+        html = result.html;
+        actions = result.actions;
+        groups = result.groups;
+      }
+    }
+ 
+    runActions(actions, groups , currentTime, root);
+  }, 100);
 
   // --- reactive render ---
   $: if (deck) {
-    // html = renderTaleemSlide(deck.deck[0]);
-    const result = renderTaleemSlide(deck.deck[1]);
-    debugger;
-    html = result.html;
-    actions = result.actions;
-  }
+  const result = renderTaleemSlide(deck.deck[0]);
+  html = result.html;
+  actions = result.actions;
+  groups = result.groups;
+}
 </script>
 
 <div class="root">
   <div class="left">
-    <div class="stage">
+    <div class="stage" bind:this={root}>
       {@html html}
     </div>
 
@@ -122,6 +131,10 @@
   @import "/css/themes/dark.css";
   @import "../css/index.css";
   @import "/css/app.css";
+
+  .hidden {
+    display: none;
+  }
 
   :global(body) {
     margin: 0;

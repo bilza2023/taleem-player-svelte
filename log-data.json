@@ -1,0 +1,47 @@
+
+[
+    {
+        "time": 0,
+        "state": {
+            "visible": [
+                "s0-title"
+            ],
+            "hidden": [
+                "s0-subtitle"
+            ]
+        }
+    },
+    {
+        "time": 3,
+        "state": {
+            "visible": [
+                "s0-title",
+                "s0-subtitle"
+            ],
+            "hidden": []
+        }
+    }
+]
+
+
+
+
+<section class="slide titleAndSubtitle" id="s0">
+
+<h1 
+  id="s0-title" 
+  class="hidden "
+>
+  Taleem Slides
+</h1>
+
+
+      <h2 
+        id="s0-subtitle" 
+        class="hidden "
+      >
+        A calm, structured way to present ideas
+      </h2>
+    
+
+</section>
