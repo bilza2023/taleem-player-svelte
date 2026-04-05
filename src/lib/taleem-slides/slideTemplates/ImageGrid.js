@@ -1,12 +1,13 @@
+
 import { extractTimeline } from "../renders/extractTimeline.js";
 import { buildSequentialStates } from "../renders/buildSequentialStates.js";
 import { addIdToItems } from "../helpers/addIdToItems.js";
 
+
 export function ImageGridSlide(data) {
+
   const rawItems = data.data ?? [];
-
   const items = addIdToItems(rawItems);
-
   const images = items.filter(d => d.name === "image");
 
   if (!images.length) {
@@ -20,7 +21,7 @@ export function ImageGridSlide(data) {
   const html = `
     <section class="slide imageGrid">
 
-      <div class="image-grid">
+      <div class="image-grid ">
         ${images
           .map(
             img => `

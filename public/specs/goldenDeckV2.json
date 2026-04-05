@@ -236,7 +236,10 @@
       "data": [
         { "name": "image", "content": "box.webp", "timings": [{ "time": 180, "event": "show" }] },
         { "name": "image", "content": "whatisforce.webp", "timings": [{ "time": 182, "event": "show" }] },
-        { "name": "image", "content": "image.png", "timings": [{ "time": 184, "event": "show" }] }
+        { "name": "image", "content": "image.png", "timings": [{ "time": 183, "event": "show" }] },
+        { "name": "image", "content": "box.webp", "timings": [{ "time": 184, "event": "show" }] },
+        { "name": "image", "content": "whatisforce.webp", "timings": [{ "time": 185, "event": "show" }] },
+        { "name": "image", "content": "image.png", "timings": [{ "time": 186, "event": "show" }] }
       ]
     },
 
@@ -258,7 +261,10 @@
       "data": [
         { "name": "text", "content": "Clear structure improves understanding", "timings": [{ "time": 200, "event": "show" }] },
         { "name": "text", "content": "Each idea should be isolated", "timings": [{ "time": 202, "event": "show" }] },
-        { "name": "text", "content": "Visual layout reduces confusion", "timings": [{ "time": 204, "event": "show" }] }
+        { "name": "text", "content": "Visual layout reduces confusion", "timings": [{ "time": 204, "event": "show" }] },
+        { "name": "text", "content": "Clear structure improves understanding", "timings": [{ "time": 205, "event": "show" }] },
+        { "name": "text", "content": "Each idea should be isolated", "timings": [{ "time": 206, "event": "show" }] },
+        { "name": "text", "content": "Visual layout reduces confusion", "timings": [{ "time": 207, "event": "show" }] }
       ]
     }
 
