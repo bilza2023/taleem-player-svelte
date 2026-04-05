@@ -146,6 +146,7 @@
 .remove {
   display:none
 }
+
 /* dimmed items */
 .dim {
   opacity: 0.35;

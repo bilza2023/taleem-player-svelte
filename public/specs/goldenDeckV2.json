@@ -34,7 +34,7 @@
       "end": 30,
       "data": [
         { "name": "bullet", "content": "Slides are generated from clean data", "timings": [{ "time": 20, "event": "show" }] },
-        { "name": "bullet", "content": "Nothing changes behind the scenes", "timings": [{ "time": 22, "event": "show" }] },
+        { "name": "bullet", "content": "Nothing changes behind the scenes.However some lines do wrap.", "timings": [{ "time": 22, "event": "show" }] },
         { "name": "bullet", "content": "The author controls what appears", "timings": [{ "time": 24, "event": "show" }] },
         { "name": "bullet", "content": "The same lesson looks the same everywhere", "timings": [{ "time": 26, "event": "show" }] }
       ]
@@ -171,7 +171,7 @@
         "timings": [{ "time": 140, "event": "show" }] , 
         "spItems": [
           { "name": "text", "content": "This is the first like " },
-          { "name": "image", "content": "image.png" }
+          { "name": "image", "content": "/public/images/image.png" }
         ]
       },
         { "name": "math", 
@@ -179,7 +179,7 @@
         "timings": [{ "time": 143, "event": "show" }],
         "spItems": [
           { "name": "text", "content": "2nd line side panel content" },
-          { "name": "image", "content": "box.webp" }
+          { "name": "image", "content": "/public/images/box.webp" }
         ] 
       },
       { "name": "math", 
@@ -187,7 +187,7 @@
         "timings": [{ "time": 146, "event": "show" }],
       "spItems": [
           { "name": "text", "content": "This is spItem of the third line." },
-          { "name": "image", "content": "image.png" }
+          { "name": "image", "content": "/public/images/image.png" }
         ]
       }
       ]

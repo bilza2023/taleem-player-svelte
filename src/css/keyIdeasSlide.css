@@ -25,12 +25,19 @@
 
   gap: 2.5rem;
 
-  /* 🔥 ADD ONLY THIS */
+  /* 🔥 CARD LOOK */
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 2rem;
+
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+
+  /* animation */
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-/* 🔥 ADD ONLY THIS */
+/* visible */
 .slide.keyIdeasSlide .key-idea:not(.hidden) {
   opacity: 1;
 }
@@ -71,5 +78,15 @@
 
   .slide.keyIdeasSlide .key-idea {
     gap: 1.5rem;
+    padding: 1.2rem;
   }
+}
+
+.slide.keyIdeasSlide .key-idea {
+  width: 100%;
+}
+
+.slide.keyIdeasSlide .key-idea {
+  width: 100%;
+  max-width: 400px;
 }

@@ -30,7 +30,7 @@ export function TitleAndParaSlide(data) {
           ? `
             <h1 
               id="${titleItem.id}" 
-              class="hidden ${titleItem.classes || ""}"
+              class="hidden taleem-heading-md "
             >
               ${titleItem.content}
             </h1>
@@ -40,7 +40,7 @@ export function TitleAndParaSlide(data) {
 
       <p 
         id="${paraItem.id}" 
-        class="hidden ${paraItem.classes || ""}"
+        class="hidden taleem-para "
       >
         ${paraItem.content}
       </p>

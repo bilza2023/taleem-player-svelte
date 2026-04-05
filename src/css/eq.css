@@ -4,7 +4,7 @@
 
 .slide.eq {
     display: flex;
-    color:gray;
+    color: gray;
     flex-direction: row;
 
     align-items: flex-start;
@@ -15,9 +15,9 @@
     padding-left: 3rem;
     padding-right: 3rem;
 
-    /* Prevent layout explosion */
     overflow: hidden;
 }
+
 
 /* -------------------------------
    Left: Equation Lines
@@ -25,7 +25,7 @@
 
 .slide.eq .eq-lines {
     flex: 0 0 45%;
-    min-width: 0;                 /* 🔥 critical for flex shrink */
+    min-width: 0;
     overflow: hidden;
 
     list-style: none;
@@ -36,34 +36,47 @@
     flex-direction: column;
 }
 
+
+/* BASE LINE (clean, readable) */
 .slide.eq .eq-lines li {
-    padding: 4px 6px;
+    padding: 6px 10px;
     font-size: 1.25rem;
-    line-height: 1.3;
+    line-height: 1.4;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
 
-    /* Handle long math safely */
+    color: rgba(255,255,255,0.85);
+
     overflow-x: auto;
     overflow-y: hidden;
     max-width: 100%;
 }
 
-/* Highlight active line */
-/* .slide.eq .eq-lines li:last-child {
-    background: rgba(245, 197, 66, 0.18);
-    font-weight: 600;
-    border: 1px solid gold;
-    border-radius: 10px;
-} */
-.highlighted {
-    background: rgba(150, 124, 52, 0.18);
-    color:white;
-    font-weight: 600;
-    border: 2px solid gold;
-    border-radius: 10px;
+
+/* 🔥 REMOVE DIM EFFECT ONLY IN EQ */
+.slide.eq .eq-lines li.dim {
+    opacity: 1;
+    color: rgba(255,255,255,0.7);
 }
+
+
+/* 🔥 STRONG FOCUS */
+.slide.eq .eq-lines li.highlighted {
+    background: rgba(245, 197, 66, 0.18);
+    color: #ffffff;
+    border: 2 px solide green;
+    border-radius: 10px;
+    font-weight: 700;
+
+    border: 2px solid #f5c542;
+    border-radius: 10px;
+
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+
+    transform: scale(1.02);
+}
+
 
 /* -------------------------------
    Right: Side Panel
@@ -71,7 +84,7 @@
 
 .slide.eq .eq-side-panel {
     flex: 0 0 55%;
-    min-width: 0;                 /* 🔥 critical */
+    min-width: 0;
     overflow: hidden;
 
     padding: 6px;
@@ -84,6 +97,7 @@
     flex-direction: column;
     gap: 4px;
 }
+
 
 /* Explanation text */
 
@@ -98,6 +112,7 @@
 
     overflow-wrap: break-word;
 }
+
 
 /* Explanation image */
 

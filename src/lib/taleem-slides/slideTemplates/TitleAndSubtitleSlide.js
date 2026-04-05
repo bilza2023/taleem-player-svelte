@@ -33,7 +33,7 @@ export function TitleAndSubtitleSlide(data) {
 
       <h1 
         id="${titleItem.id}" 
-        class="hidden ${titleItem.classes || ""}"
+        class="hidden taleem-heading-lg ${titleItem.classes || ""}"
       >
         ${titleItem.content}
       </h1>
@@ -43,7 +43,7 @@ export function TitleAndSubtitleSlide(data) {
           ? `
             <h2 
               id="${subtitleItem.id}" 
-              class="hidden ${subtitleItem.classes || ""}"
+              class="hidden taleem-heading-md ${subtitleItem.classes || ""}"
             >
               ${subtitleItem.content}
             </h2>

@@ -40,7 +40,7 @@ export function BulletListSlide(data) {
             b => `
             <li 
               id="${b.id}" 
-              class="hidden ${b.classes || ""}"
+              class="taleem-li hidden ${b.classes || ""}"
             >
               ${b.content}
             </li>
