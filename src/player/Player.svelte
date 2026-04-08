@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { getDeckEndTime } from "../lib/utils/index.js";
-  import { renderTaleemSlide } from "../lib/taleem-slides";
+  import { renderTaleemSlide } from "taleem-slides";
   // import { runActions } from "../lib/actionRunner/runActions.js";
   import { runActions } from "taleem-action-runner";
   import { getSlideAtTime } from "../lib/utils/getSlideAtTime.js";
@@ -65,6 +65,7 @@
 
       if (slide) {
         const result = renderTaleemSlide(slide);
+        console.log("result==>",result);
         html = result.html;
         actions = result.actions;
         groups = result.groups;

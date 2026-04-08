@@ -11,7 +11,8 @@
   let timer;
 
   async function loadDeck() {
-    const res = await fetch("/public/specs/goldenDeckV2.json");
+    // const res = await fetch("/public/specs/goldenDeckV2.json");
+    const res = await fetch("/public/GoldenDeckV2-8Apr2026.json");
     const json = await res.json();
     deck = resolveAssetPaths(json,"/public/images/");
 

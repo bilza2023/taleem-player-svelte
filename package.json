@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "taleem-action-runner": "^0.0.1",
-    "taleem-pam": "^1.0.1"
+    "taleem-pam": "^1.0.1",
+    "taleem-slides": "^1.2.0"
   }
 }
